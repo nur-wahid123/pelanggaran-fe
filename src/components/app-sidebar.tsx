@@ -2,10 +2,16 @@
 
 import * as React from "react"
 import {
+  Building,
   Frame,
   GalleryVerticalEnd,
+  LayoutDashboard,
+  List,
   Map,
   PieChart,
+  PlusCircle,
+  Tag,
+  User,
 } from "lucide-react"
 
 import { NavProjects } from "@/components/nav-projects"
@@ -110,17 +116,32 @@ const data = {
     {
       name: "Dashboard",
       url: "/dashboard",
-      icon: Frame,
+      icon: LayoutDashboard,
     },
     {
       name: "Input Pelanggaran",
       url: "/dashboard/input-violation",
-      icon: PieChart,
+      icon: PlusCircle,
     },
     {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      name: "Jenis Pelanggaran",
+      url: "/dashboard/violation-type",
+      icon: Tag,
+    },
+    {
+      name: "Kelas",
+      url: "/dashboard/class-page",
+      icon: Building,
+    },
+    {
+      name: "Data Pelanggaran",
+      url: "/dashboard/violation",
+      icon: List,
+    },
+    {
+      name: "Siswa",
+      url: "/dashboard/student",
+      icon: User,
     },
   ],
 }
