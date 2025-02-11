@@ -47,7 +47,7 @@ export default function StudentAndViolationInput() {
             setStudentIds([])
             setViolationIds([])
             setNote('')
-            setSearch({ student: '', violation: '' })
+            setSearch({ ...search, student: '', violation: '' })
         } catch (error) {
             toaster.toast({ description: 'Data Gagal Di Input', title: 'Gagal', variant: 'destructive' })
         }
