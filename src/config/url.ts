@@ -2,6 +2,20 @@ import CONFIG from "./config"
 
 const ENDPOINT = {
 
+    //Student
+    STUDENT_CREATE_BATCH: `${CONFIG.BASE_URL}/student/create-batch`,
+    STUDENT_CREATE: `${CONFIG.BASE_URL}/student/create`,
+    DETAIL_STUDENT: `${CONFIG.BASE_URL}/student/detail`,
+    MASTER_STUDENT: `${CONFIG.BASE_URL}/student/list`,
+    EXPORT_STUDENT: `${CONFIG.BASE_URL}/student/export`,
+
+    //Violation Type
+    CREATE_VIOLATION: `${CONFIG.BASE_URL}/violation/create`,
+    DETAIL_VIOLATION: `${CONFIG.BASE_URL}/violation/detail`,
+    UPDATE_VIOLATION: `${CONFIG.BASE_URL}/violation/update`,
+    DELETE_VIOLATION: `${CONFIG.BASE_URL}/violation/delete`,
+    MASTER_VIOLATION: `${CONFIG.BASE_URL}/violation/list`,
+
     //Violation Type
     CREATE_VIOLATION_TYPE: `${CONFIG.BASE_URL}/violation-type/create`,
     DETAIL_VIOLATION_TYPE: `${CONFIG.BASE_URL}/violation-type/detail`,

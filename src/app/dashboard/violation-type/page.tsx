@@ -34,7 +34,7 @@ export default function Page() {
                 setPagination(res.data.pagination);
             }
         } catch (error) {
-            console.error("Error fetching products:", error);
+            console.error("Error fetching violation:", error);
         }
     }
         , [search]);

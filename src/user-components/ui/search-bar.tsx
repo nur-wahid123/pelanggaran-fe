@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/useDebounce";
 
@@ -34,7 +33,7 @@ export default function SearchBar({
             onChange={(e) => { handleChange(e) }}
             value={query}
           />
-          <Search className="absolute left-2.5 top-2.5 w-4 h-4 text-gray-400 dark:text-gray-600" />
+          {/* <Search className="absolute left-2.5 top-2.5 w-4 h-4 text-gray-400 dark:text-gray-600" /> */}
         </div>
       </div>
     </div>

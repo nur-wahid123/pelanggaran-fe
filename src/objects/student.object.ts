@@ -1,16 +1,16 @@
 import { ClassObject } from "./class.object";
 import { Violation } from "./violation.object";
 
-export interface Student {
-    id?: number;
+export class Student {
+    public id?: number;
   
-    name?: string;
+    public name?: string;
   
-    school_student_id?: string;
+    public school_student_id?: string;
   
-    national_student_id?: string;
+    public national_student_id?: string;
   
-    violations?: Violation[];
+    public violations?: Violation[];
   
-    student_class?: ClassObject;
+    public student_class?: ClassObject;
 }
