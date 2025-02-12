@@ -119,24 +119,24 @@ const data = {
       icon: LayoutDashboard,
     },
     {
-      name: "Input Pelanggaran",
-      url: "/dashboard/input-violation",
-      icon: PlusCircle,
+      name: "Data Pelanggaran",
+      url: "/dashboard/violation",
+      icon: List,
     },
     {
       name: "Jenis Pelanggaran",
       url: "/dashboard/violation-type",
       icon: Tag,
     },
+    // {
+    //   name: "Input Pelanggaran",
+    //   url: "/dashboard/input-violation",
+    //   icon: PlusCircle,
+    // },
     {
       name: "Kelas",
       url: "/dashboard/class-page",
       icon: Building,
-    },
-    {
-      name: "Data Pelanggaran",
-      url: "/dashboard/violation",
-      icon: List,
     },
     {
       name: "Siswa",

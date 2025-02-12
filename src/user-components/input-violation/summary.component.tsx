@@ -70,6 +70,9 @@ const Summary: React.FC<SummaryProps> = ({ students, violations, setStudentIds, 
                                     <TableCell>
                                         {violations.reduce((a, b) => a + (b.point ?? 0), 0)}
                                     </TableCell>
+                                    <TableCell>
+                                        Poin
+                                    </TableCell>
                                 </TableRow>
                             </TableFooter>
                         )}

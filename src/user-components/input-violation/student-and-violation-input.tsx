@@ -42,7 +42,7 @@ export default function StudentAndViolationInput() {
             note
         }
         try {
-            const res = await axiosInstance.post(ENDPOINT.CREATE_VIOLATION, body)
+            await axiosInstance.post(ENDPOINT.CREATE_VIOLATION, body)
             toaster.toast({ description: 'Berhasil Menambahkan Data', title: 'Sukses' })
             setStudentIds([])
             setViolationIds([])
@@ -121,7 +121,6 @@ export default function StudentAndViolationInput() {
                             className="w-full"
                             onChange={(e) => setSearch({ ...search, student: e.target.value })}
                         />
-                        <Button onClick={() => { setStudentIds([]) }}><RefreshCwIcon /></Button>
                     </div>
                     <div className="w-full h-96 overflow-auto">
                         <Table>
@@ -170,7 +169,6 @@ export default function StudentAndViolationInput() {
                             className="w-full"
                             onChange={(e) => setSearch({ ...search, violation: e.target.value })}
                         />
-                        <Button onClick={() => { setViolationIds([]) }}><RefreshCwIcon /></Button>
                     </div>
                     <div className="w-full h-96 overflow-auto">
                         <Table>
@@ -211,9 +209,12 @@ export default function StudentAndViolationInput() {
                 </div>
             </div>
             <div className="flex flex-col flex-grow w-full min-h-screen">
+                <div className="flex gap-6 items-center">
                 <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
                     Detail Pelanggaran
                 </h1>
+                <Button onClick={() => { setStudentIds([]); setViolationIds([]); }}><RefreshCwIcon /></Button>
+                </div>
                 <Summary students={studentIds} violations={violationIds} setStudentIds={setStd} setViolationIds={setVlt} />
             </div>
             <Label className="text-2xl">Catatan</Label>
