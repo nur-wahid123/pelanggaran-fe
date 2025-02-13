@@ -60,7 +60,7 @@ export default function Page() {
         if (!confirm) {
             return;
         }
-        axiosInstance.delete(`${ENDPOINT.DELETE_VIOLATION_TYPE}/${id}`).then(() => {
+        axiosInstance.delete(`${ENDPOINT.DELETE_VIOLATION}/${id}`).then(() => {
             toaster.toast({
                 title: "Success",
                 description: "Pelanggaran berhasil dihapus",

@@ -24,11 +24,11 @@ const ENDPOINT = {
     MASTER_VIOLATION_TYPE: `${CONFIG.BASE_URL}/violation-type/list`,
 
     //Class
-    CREATE_CLASS: `${CONFIG.BASE_URL}/class/create`,
-    DETAIL_CLASS: `${CONFIG.BASE_URL}/class/detail`,
-    UPDATE_CLASS: `${CONFIG.BASE_URL}/class/update`,
-    DELETE_CLASS: `${CONFIG.BASE_URL}/class/delete`,
-    MASTER_CLASS: `${CONFIG.BASE_URL}/class/list`,
+    CREATE_CLASS: `${CONFIG.BASE_URL}/classes/create`,
+    DETAIL_CLASS: `${CONFIG.BASE_URL}/classes/detail`,
+    UPDATE_CLASS: `${CONFIG.BASE_URL}/classes/update`,
+    DELETE_CLASS: `${CONFIG.BASE_URL}/classes/delete`,
+    MASTER_CLASS: `${CONFIG.BASE_URL}/classes/list`,
 
     //Authentication
     LOGIN: `${CONFIG.BASE_URL}/auth/login`,
