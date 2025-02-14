@@ -17,6 +17,7 @@ const ENDPOINT = {
     MASTER_VIOLATION: `${CONFIG.BASE_URL}/violation/list`,
 
     //Violation Type
+    CREATE_VIOLATION_TYPE_BATCH: `${CONFIG.BASE_URL}/violation-type/create-batch`,
     CREATE_VIOLATION_TYPE: `${CONFIG.BASE_URL}/violation-type/create`,
     DETAIL_VIOLATION_TYPE: `${CONFIG.BASE_URL}/violation-type/detail`,
     UPDATE_VIOLATION_TYPE: `${CONFIG.BASE_URL}/violation-type/update`,

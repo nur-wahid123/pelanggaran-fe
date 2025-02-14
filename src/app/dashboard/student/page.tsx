@@ -16,12 +16,12 @@ import { useCallback, useEffect, useState } from "react";
 
 
 export interface StudentFilterType {
-    classId?: number;
-    search: string;
-  }
+  classId?: number;
+  search: string;
+}
 
 export default function Page() {
-    const [data, setData] = useState<Student[]>([]);
+  const [data, setData] = useState<Student[]>([]);
   const [pagination, setPagination] = useState<PaginateContentProps>({});
   const [filter, setFilter] = useState<StudentFilterType>({
     classId: undefined,
@@ -31,19 +31,19 @@ export default function Page() {
 
   async function handleDownload() {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Template Input Nilai');
+    const worksheet = workbook.addWorksheet('Template Input Siswa');
     const columns = [
-        { header: 'Nama', width: 40 },
-        { header: 'NISN', width: 20 },
-        { header: 'NIS', width: 8 },
-        { header: 'Kelas', width: 8 },
+      { header: 'Nama', width: 40 },
+      { header: 'NISN', width: 20 },
+      { header: 'NIS', width: 8 },
+      { header: 'Kelas', width: 8 },
     ];
 
     worksheet.columns = columns;
 
     const headerRow = worksheet.getRow(1);
     headerRow.eachCell((cell) => {
-        cell.protection = { locked: true }; // Lock the header cells
+      cell.protection = { locked: true }; // Lock the header cells
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
@@ -54,7 +54,7 @@ export default function Page() {
     a.download = `Template Input Siswa.xlsx`;
     a.click();
     URL.revokeObjectURL(url);
-}
+  }
 
   const fetchData = useCallback(
     async (start: number, limit: number) => {
@@ -91,7 +91,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchData(pagination?.page ?? 1, pagination?.take ?? 20);
-    return () => {};
+    return () => { };
   }, []);
 
   function handleSearch(query: string) {
@@ -106,71 +106,71 @@ export default function Page() {
   }
 
   const tableHeader: string[] = ["Nama", "NIS", "Kelas", "Pelanggaran", "Detail"];
-    return (
-        <div className="p-4">
-            <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
-                Siswa
-            </h1>
-            <div className="flex justify-between items-center my-4 gap-4">
-                <SearchBar isLoading={isLoading} onSearch={handleSearch} />
-                <StudentFilterComponent filter={filter} setFilter={setFilter} />
-                <div className="flex gap-4 items-center">
-                    <Select
-                        value={pagination?.take?.toString()}
-                        onValueChange={(e) =>
-                            setPagination({ ...pagination, take: Number(e), page: 1 })
-                        }
-                    >
-                        <SelectTrigger className="w-[90px]">
-                            <SelectValue placeholder="Rows" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {[10, 20, 30, 40, 50].map((item) => (
-                                <SelectItem key={item} value={item.toString()}>
-                                    {item}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-                <p className="w-full line-clamp-1">dari {pagination.item_count} data</p>
-                <PaginationSelf pagination={pagination} fetchData={fetchData} />
-                <Button onClick={handleDownload}>Download template <Download /></Button>
-                <ImportStudent reFetch={reFetch} />
-            </div>
-            <Table>
-                <TableHeader className="bg-slate-100">
-                    <TableRow>
-                        {tableHeader.map((thead, i) => (
-                            <TableHead key={i}>{thead}</TableHead>
-                        ))}
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {data.map((student, i) => (
-                        <TableRow key={i}>
-                            <TableCell>
-                                <div className="font-semibold">{student.name}</div>
-                                <div className="text-sm text-slate-500">
-                                    {student.national_student_id}
-                                </div>
-                            </TableCell>
-                            <TableCell>{student.school_student_id}</TableCell>
-                            <TableCell>{student.student_class?.name}</TableCell>
-                            <TableCell>{student.violations?.length}</TableCell>
-                            <TableCell>
-                                <Link
-                                    href={`/dashboard/master/student/${student.national_student_id}`}
-                                >
-                                    <Button disabled={isLoading}>
-                                        <Eye />
-                                    </Button>
-                                </Link>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+  return (
+    <div className="p-4">
+      <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
+        Siswa
+      </h1>
+      <div className="flex justify-between items-center my-4 gap-4">
+        <SearchBar isLoading={isLoading} onSearch={handleSearch} />
+        <StudentFilterComponent filter={filter} setFilter={setFilter} />
+        <div className="flex gap-4 items-center">
+          <Select
+            value={pagination?.take?.toString()}
+            onValueChange={(e) =>
+              setPagination({ ...pagination, take: Number(e), page: 1 })
+            }
+          >
+            <SelectTrigger className="w-[90px]">
+              <SelectValue placeholder="Rows" />
+            </SelectTrigger>
+            <SelectContent>
+              {[10, 20, 30, 40, 50].map((item) => (
+                <SelectItem key={item} value={item.toString()}>
+                  {item}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-    )
+        <p className="w-full line-clamp-1">dari {pagination.item_count} data</p>
+        <PaginationSelf pagination={pagination} fetchData={fetchData} />
+        <Button onClick={handleDownload}>Download template <Download /></Button>
+        <ImportStudent reFetch={reFetch} />
+      </div>
+      <Table>
+        <TableHeader className="bg-slate-100">
+          <TableRow>
+            {tableHeader.map((thead, i) => (
+              <TableHead key={i}>{thead}</TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((student, i) => (
+            <TableRow key={i}>
+              <TableCell>
+                <div className="font-semibold">{student.name}</div>
+                <div className="text-sm text-slate-500">
+                  {student.national_student_id}
+                </div>
+              </TableCell>
+              <TableCell>{student.school_student_id}</TableCell>
+              <TableCell>{student.student_class?.name}</TableCell>
+              <TableCell>{student.violations?.length}</TableCell>
+              <TableCell>
+                <Link
+                  href={`/dashboard/master/student/${student.national_student_id}`}
+                >
+                  <Button disabled={isLoading}>
+                    <Eye />
+                  </Button>
+                </Link>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
 }

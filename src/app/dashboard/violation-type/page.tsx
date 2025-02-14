@@ -9,6 +9,7 @@ import PaginationSelf, { PaginateContentProps } from "@/user-components/ui/pagin
 import SearchBar from "@/user-components/ui/search-bar";
 import AddViolationType from "@/user-components/violation-type/add-violation-type.component";
 import EditViolationType from "@/user-components/violation-type/update-violation-type.component";
+import ImportViolationType from "@/user-components/violation-type/violation-type-import.component";
 import { axiosInstance } from "@/util/request.util";
 import { Trash } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -111,6 +112,7 @@ export default function Page() {
                     </div>
                     <p className="w-full line-clamp-1">dari {pagination.item_count} data</p>
                     <AddViolationType reFetch={reFetch} />
+                    <ImportViolationType reFetch={reFetch} />
                     <PaginationSelf pagination={pagination} fetchData={fetchData} />
                 </div>
                 <div>

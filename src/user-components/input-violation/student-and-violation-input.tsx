@@ -122,7 +122,7 @@ export default function StudentAndViolationInput() {
                             onChange={(e) => setSearch({ ...search, student: e.target.value })}
                         />
                     </div>
-                    <div className="w-full h-96 overflow-auto">
+                    <div className="w-full h-full max-h-96 overflow-auto">
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -170,7 +170,7 @@ export default function StudentAndViolationInput() {
                             onChange={(e) => setSearch({ ...search, violation: e.target.value })}
                         />
                     </div>
-                    <div className="w-full h-96 overflow-auto">
+                    <div className="w-full h-full max-h-96 overflow-auto">
                         <Table>
                             <TableHeader>
                                 <TableRow>
