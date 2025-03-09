@@ -35,21 +35,34 @@ export const axiosInstance = axios.create({
   },
 });
 
-// Add a request interceptor to attach the authorization token
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("token"); // Replace this with however you store the token
+    const token = Cookies.get("token");
+    console.log(token);
+    
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Attach the token
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
+    if (error.response && error.response.status === 401) {
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  },
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.log(error);
     if (error.response && error.response.status === 401) {
       // If the server returns a 401, redirect to the login page
       window.location.href = "/login";
     }
     return Promise.reject(error);
   },
-);
+)
+
 

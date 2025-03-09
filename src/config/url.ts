@@ -9,6 +9,9 @@ const ENDPOINT = {
     MASTER_STUDENT: `${CONFIG.BASE_URL}/student/list`,
     EXPORT_STUDENT: `${CONFIG.BASE_URL}/student/export`,
 
+    //Dashboard
+    DASHBOARD_DATA: `${CONFIG.BASE_URL}/dashboard/data`,
+
     //Violation Type
     CREATE_VIOLATION: `${CONFIG.BASE_URL}/violation/create`,
     DETAIL_VIOLATION: `${CONFIG.BASE_URL}/violation/detail`,

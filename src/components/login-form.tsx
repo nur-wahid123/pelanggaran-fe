@@ -33,7 +33,16 @@ export function LoginForm({
     await axios.post(`${ENDPOINT.LOGIN}`, state)
       .then(res => {
         const twoHours = new Date(Date.now() + 2 * 60 * 60 * 1000)
-        ckie.set("token", res.data.data.access_token, { expires: twoHours })
+        const token = res.data.data.access_token;
+        console.log(token);
+        
+        if (token) {
+          ckie.set("token", token, { expires: twoHours });
+          console.log(token);
+          console.log(ckie.get("token"));
+        } else {
+          console.error("Token is undefined");
+        }        
         toaster.toast({ title: "Success", description: "Berhasil Login", variant: "default" })
         router.push("/dashboard")
       })
