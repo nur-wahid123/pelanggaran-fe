@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 export async function postFetch(url: string, data: any) {
     const res = await fetch(url, {
         method: "POST",
@@ -28,6 +27,11 @@ export async function getFetch(url: string) {
     return await res.json();
 }
 
+export async function logout() {
+  await fetch('/api/auth/set-cookie', { method: 'DELETE' });
+  window.location.href = "/login";
+}
+
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
@@ -35,15 +39,27 @@ export const axiosInstance = axios.create({
   },
 });
 
-// Add a request interceptor to attach the authorization token
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = Cookies.get("token"); // Replace this with however you store the token
+  async (config) => {
+    const response = await fetch('/api/auth/get-cookie', { method: 'GET' });
+    const data = await response.json();
+    const token = data.token
+    
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Attach the token
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  },
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
       // If the server returns a 401, redirect to the login page
@@ -51,5 +67,6 @@ axiosInstance.interceptors.request.use(
     }
     return Promise.reject(error);
   },
-);
+)
+
 

@@ -15,9 +15,9 @@ interface SummaryProps {
 const Summary: React.FC<SummaryProps> = ({ students, violations, setStudentIds, setViolationIds }) => {
 
     return (
-        <div className="flex w-full h-96">
+        <div className="flex h-full max-h-96 w-full">
             <div className="w-full flex overflow-auto">
-                <div className="w-full">
+                <div className="w-full h-full max-h-96">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -41,7 +41,7 @@ const Summary: React.FC<SummaryProps> = ({ students, violations, setStudentIds, 
                 </div>
             </div>
             <div className="w-full flex overflow-auto">
-                <div className="w-full">
+                <div className="w-full h-full max-h-96">
                     <Table>
                         <TableHeader>
                             <TableRow>

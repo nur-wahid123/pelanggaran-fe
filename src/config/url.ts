@@ -9,6 +9,9 @@ const ENDPOINT = {
     MASTER_STUDENT: `${CONFIG.BASE_URL}/student/list`,
     EXPORT_STUDENT: `${CONFIG.BASE_URL}/student/export`,
 
+    //Dashboard
+    DASHBOARD_DATA: `${CONFIG.BASE_URL}/dashboard/data`,
+
     //Violation Type
     CREATE_VIOLATION: `${CONFIG.BASE_URL}/violation/create`,
     DETAIL_VIOLATION: `${CONFIG.BASE_URL}/violation/detail`,
@@ -17,6 +20,7 @@ const ENDPOINT = {
     MASTER_VIOLATION: `${CONFIG.BASE_URL}/violation/list`,
 
     //Violation Type
+    CREATE_VIOLATION_TYPE_BATCH: `${CONFIG.BASE_URL}/violation-type/create-batch`,
     CREATE_VIOLATION_TYPE: `${CONFIG.BASE_URL}/violation-type/create`,
     DETAIL_VIOLATION_TYPE: `${CONFIG.BASE_URL}/violation-type/detail`,
     UPDATE_VIOLATION_TYPE: `${CONFIG.BASE_URL}/violation-type/update`,

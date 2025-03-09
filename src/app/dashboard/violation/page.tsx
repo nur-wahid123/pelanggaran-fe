@@ -5,9 +5,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import ENDPOINT from "@/config/url";
 import { useToast } from "@/hooks/use-toast";
 import { Violation } from "@/objects/violation.object";
+import { DatePickerWithRange } from "@/user-components/dashboard/date-picker";
 import PaginationSelf, { PaginateContentProps } from "@/user-components/ui/pagination";
 import SearchBar from "@/user-components/ui/search-bar";
-import { formatDateToExactString, formatDateToExactStringAndTime } from "@/util/date.util";
+import { DateRange, formatDate, formatDateToExactString, formatDateToExactStringAndTime, thisMonth } from "@/util/date.util";
 import { axiosInstance } from "@/util/request.util";
 import { AlertTriangle, PlusIcon, Trash } from "lucide-react";
 import Link from "next/link";
@@ -15,6 +16,8 @@ import { useCallback, useEffect, useState } from "react";
 
 export default function Page() {
     const [search, setSearch] = useState("");
+    const thisMnth = thisMonth();
+    const [dateRange, setDateRange] = useState<DateRange>({ start_date: formatDate(thisMnth.startOfMonth), finish_date: formatDate(thisMnth.endOfMonth) });
     const [pagination, setPagination] = useState<PaginateContentProps>({});
     const [violations, setViolation] = useState<Violation[]>([]);
     const toaster = useToast();
@@ -22,10 +25,11 @@ export default function Page() {
         start: number,
         limit: number,
     ) => {
+        const param = { page: start, take: limit, search: search, ...dateRange };
         try {
             const res = await axiosInstance.get(
-                `${ENDPOINT.MASTER_VIOLATION}?page=${start}&take=${limit}&search=${search}`
-            );
+                `${ENDPOINT.MASTER_VIOLATION}`
+                , { params: param });
 
             if (Array.isArray(res.data.data)) {
                 setViolation(res.data.data);
@@ -37,10 +41,10 @@ export default function Page() {
             console.error("Error fetching violation:", error);
         }
     }
-        , [search]);
+        , [search, dateRange]);
     useEffect(() => {
         fetchData(pagination?.page ?? 1, pagination?.take ?? 20);
-    }, [fetchData, pagination?.page, pagination?.take, search]);
+    }, [fetchData, pagination?.page, pagination?.take, search, dateRange]);
 
     function handleSearch(query: string) {
         if (query !== search) {
@@ -77,6 +81,10 @@ export default function Page() {
             });
     }
 
+    function setDate(from: Date, to: Date) {
+        setDateRange({ start_date: formatDate(from), finish_date: formatDate(to) });
+    }
+
     return (
         <div className="p-4">
             <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
@@ -102,6 +110,7 @@ export default function Page() {
                         </Select>
                     </div>
                     <p className="w-full line-clamp-1">dari {pagination.item_count} data</p>
+                    <DatePickerWithRange startDate={thisMnth.startOfMonth} finishDate={thisMnth.endOfMonth} setOutDate={setDate} />
                     <Link href={'/dashboard/input-violation'}>
                         <Button className="flex gap-3 shadow hover:shadow-md" variant="outline"><AlertTriangle className="w-4" />Input Pelanggaran <PlusIcon className="w-4" /></Button>
                     </Link>
