@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
-import ckie from "js-cookie"
 import axios from "axios"
 import ENDPOINT from "@/config/url"
 import { Eye, EyeOff } from "lucide-react"
@@ -31,15 +30,16 @@ export function LoginForm({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     await axios.post(`${ENDPOINT.LOGIN}`, state)
-      .then(res => {
+      .then(async res => {
         const twoHours = new Date(Date.now() + 2 * 60 * 60 * 1000)
         const token = res.data.data.access_token;
-        console.log(token);
         
         if (token) {
-          ckie.set("token", token, { expires: twoHours });
-          console.log(token);
-          console.log(ckie.get("token"));
+          try {
+            await fetch('/api/auth/set-cookie', { method: 'POST', body: JSON.stringify({ token }) });
+          } catch (error) {            
+            console.log(error);
+          }
         } else {
           console.error("Token is undefined");
         }        
