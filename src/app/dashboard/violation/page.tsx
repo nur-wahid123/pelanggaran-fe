@@ -110,7 +110,7 @@ export default function Page() {
                         </Select>
                     </div>
                     <p className="w-full line-clamp-1">dari {pagination.item_count} data</p>
-                    <DatePickerWithRange startDate={thisMnth.startOfMonth} finishDate={thisMnth.endOfMonth} setOutDate={setDate} />
+                    <DatePickerWithRange setOutDate={setDate} />
                     <Link href={'/dashboard/input-violation'}>
                         <Button className="flex gap-3 shadow hover:shadow-md" variant="outline"><AlertTriangle className="w-4" />Input Pelanggaran <PlusIcon className="w-4" /></Button>
                     </Link>

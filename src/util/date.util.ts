@@ -78,3 +78,11 @@ export class DateRange {
 
   finish_date!: string;
 }
+
+export function formatRangeToExactString(from:Date,to:Date): string{
+  if(from.getFullYear() === to.getFullYear()){
+    return `${from.getDate()} ${convertMonthNumberToMonthName(from.getMonth())} - ${to.getDate()} ${convertMonthNumberToMonthName(to.getMonth())} ${from.getFullYear()}`
+  } else {
+    return `${formatDateToExactString(from)} - ${formatDateToExactString(to)}`
+  }
+}

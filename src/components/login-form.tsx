@@ -31,7 +31,6 @@ export function LoginForm({
     e.preventDefault()
     await axios.post(`${ENDPOINT.LOGIN}`, state)
       .then(async res => {
-        const twoHours = new Date(Date.now() + 2 * 60 * 60 * 1000)
         const token = res.data.data.access_token;
         
         if (token) {
@@ -42,6 +41,7 @@ export function LoginForm({
           }
         } else {
           console.error("Token is undefined");
+          return;
         }        
         toaster.toast({ title: "Success", description: "Berhasil Login", variant: "default" })
         router.push("/dashboard")

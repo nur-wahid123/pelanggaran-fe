@@ -7,6 +7,8 @@ import { DateRange, formatDate, formatDateToExactString, thisMonth, thisWeek } f
 import { axiosInstance } from "@/util/request.util";
 import { useCallback, useEffect, useState } from "react";
 import { DatePickerWithRange } from "./date-picker";
+import { ChartData } from "./chart-data";
+import { DonutData } from "./donut-data";
 
 export default function Statistics() {
   const [data, setData] = useState<DashboardResponseDto>({ student_with_point_more_than_30: [] });
@@ -37,11 +39,11 @@ export default function Statistics() {
   }, [dateRange])
   useEffect(() => {
     setDate(qry.startOfMonth, qry.endOfMonth);
-    fetcData();
+    // fetcData();
   }, [])
-  return (
-    <div className="flex flex-col gap-5">
 
+  return (
+    <div className="flex flex-col gap-5 max-h-screen">
       <div className=" flex justify-between items-center">
         <Tabs defaultValue='this_month' className="w-full items-center flex gap-6">
           <TabsList>
@@ -58,7 +60,6 @@ export default function Statistics() {
           {formatDateToExactString(new Date(dateRange.start_date))} - {formatDateToExactString(new Date(dateRange.finish_date))}
         </div>
       </div>
-
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
 
         <div className="max-w-1/4 flex flex-col gap-5 w-full p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -96,6 +97,14 @@ export default function Statistics() {
           </div>
         </div>
 
+      </div>
+      <div className="grid gap-4 grid-cols-4">
+        <div className="col-span-2">
+          <ChartData from={new Date(dateRange.start_date)} to={new Date(dateRange.finish_date)} />
+        </div>
+        <div className="col-span-2">
+          <DonutData />
+        </div>
       </div>
     </div>
   )

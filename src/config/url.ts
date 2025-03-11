@@ -11,6 +11,7 @@ const ENDPOINT = {
 
     //Dashboard
     DASHBOARD_DATA: `${CONFIG.BASE_URL}/dashboard/data`,
+    CHART_DATA: `${CONFIG.BASE_URL}/dashboard/chart-data`,
 
     //Violation Type
     CREATE_VIOLATION: `${CONFIG.BASE_URL}/violation/create`,
