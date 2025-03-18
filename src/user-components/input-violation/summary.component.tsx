@@ -15,9 +15,9 @@ interface SummaryProps {
 const Summary: React.FC<SummaryProps> = ({ students, violations, setStudentIds, setViolationIds }) => {
 
     return (
-        <div className="flex h-full max-h-96 w-full">
+        <div className="flex h-full max-h-72 w-full">
             <div className="w-full flex overflow-auto">
-                <div className="w-full h-full max-h-96">
+                <div className="w-full h-full max-h-72">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -29,7 +29,7 @@ const Summary: React.FC<SummaryProps> = ({ students, violations, setStudentIds, 
                         <TableBody>
                             {students.map(student => (
                                 <TableRow key={student.id}>
-                                    <TableCell>{student.name}</TableCell>
+                                    <TableCell>{student.name?.toUpperCase()}</TableCell>
                                     <TableCell>{student.national_student_id}</TableCell>
                                     <TableCell>
                                         <Button size={'sm'} onClick={() => setStudentIds(student)}><TrashIcon /></Button>
@@ -41,7 +41,7 @@ const Summary: React.FC<SummaryProps> = ({ students, violations, setStudentIds, 
                 </div>
             </div>
             <div className="w-full flex overflow-auto">
-                <div className="w-full h-full max-h-96">
+                <div className="w-full h-full max-h-72">
                     <Table>
                         <TableHeader>
                             <TableRow>

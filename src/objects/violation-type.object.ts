@@ -5,7 +5,7 @@ export interface ViolationType {
   
     name?: string;
   
-    point?: number;
+    point: number;
   
     violations: Violation[];
 }

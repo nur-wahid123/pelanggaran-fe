@@ -51,7 +51,7 @@ export default function EditClass({ classId, reFetch }: { classId: number | unde
                 setOpenEditClass(false);
             })
             .catch((err) => {
-                console.log(err)
+                console.error(err)
                 if (err.code === 400) {
                     toast.toast({ title: "Error", description: err.response.data.message[0], variant: "destructive" })
                 } else {

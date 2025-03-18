@@ -43,10 +43,9 @@ export function ChartData({ from, to }: Parameters) {
     const fetchData = useCallback(async () => {
         const params = { type }
         await axiosInstance.get(ENDPOINT.CHART_DATA, { params }).then(res => {
-            console.log(res.data.data);
             setData(res.data.data)
         }).catch(e => {
-            console.log(e);
+            console.error(e);
         })
     }, [type])
 

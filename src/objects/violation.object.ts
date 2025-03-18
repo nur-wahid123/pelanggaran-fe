@@ -11,7 +11,7 @@ export interface Violation {
   
     creator?: User;
   
-    student?: Student;
+    students?: Student[];
   
-    violation_types?: ViolationType[];
+    violation_types: ViolationType[];
 }

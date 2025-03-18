@@ -11,6 +11,8 @@ import Summary from "./summary.component";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { truncateName } from "@/util/util";
 
 export default function StudentAndViolationInput() {
     const [studentIds, setStudentIds] = useState<Student[]>([]);
@@ -20,6 +22,7 @@ export default function StudentAndViolationInput() {
     const [search, setSearch] = useState<{ student: string, violation: string }>({ student: '', violation: '' });
     const [note, setNote] = useState<string>('');
     const toaster = useToast()
+    const [dialogVisibility, setDialogVisibility] = useState(false);
 
     const fetchAll = useCallback(async () => {
         fetchStudent();
@@ -27,15 +30,12 @@ export default function StudentAndViolationInput() {
     }, [])
 
     const handleSubmit = async () => {
-
         const stdIds = studentIds.map((s) => s.id)
         const vltIds = violationIds.map((v) => v.id)
         if (stdIds.length === 0 || vltIds.length === 0) {
             toaster.toast({ description: 'Data Harus Lengkap', title: 'Gagal', variant: 'destructive' })
             return;
         }
-        const isYes = confirm('Apa anda yakin data sudah benar?')
-        if (!isYes) return;
         const body = {
             student_ids: stdIds,
             violation_type_ids: vltIds,
@@ -48,13 +48,15 @@ export default function StudentAndViolationInput() {
             setViolationIds([])
             setNote('')
             setSearch({ ...search, student: '', violation: '' })
+            setDialogVisibility(false)
         } catch (error) {
             toaster.toast({ description: 'Data Gagal Di Input', title: 'Gagal', variant: 'destructive' })
+            setDialogVisibility(false)
         }
 
     }
 
-    const fetchStudent = useCallback(async (search?: string) => {
+    const fetchStudent = useCallback(async () => {
 
         const params: Record<string, any> = {
             page: 1,
@@ -62,7 +64,7 @@ export default function StudentAndViolationInput() {
         };
 
         if (search) {
-            params.search = search;
+            params.search = search.student;
         }
 
         const res = await axiosInstance.get(`${ENDPOINT.MASTER_STUDENT}`, {
@@ -72,16 +74,16 @@ export default function StudentAndViolationInput() {
         if (Array.isArray(res.data.data)) {
             setDataStudents(res.data.data);
         }
-    }, [])
+    }, [search])
 
-    const fetchViolations = useCallback(async (search?: string) => {
+    const fetchViolations = useCallback(async () => {
         const paramsViolation: Record<string, any> = {
             page: 1,
             take: 20,
         };
 
         if (search) {
-            paramsViolation.search = search;
+            paramsViolation.search = search.violation;
         }
 
         const resViolation = await axiosInstance.get(`${ENDPOINT.MASTER_VIOLATION_TYPE}`, {
@@ -91,18 +93,18 @@ export default function StudentAndViolationInput() {
         if (Array.isArray(resViolation.data.data)) {
             setDataViolations(resViolation.data.data);
         }
-    }, [])
+    }, [search])
 
     useEffect(() => {
         fetchAll()
     }, [])
 
     useEffect(() => {
-        fetchStudent(search.student)
+        fetchStudent()
     }, [search.student])
 
     useEffect(() => {
-        fetchViolations(search.violation)
+        fetchViolations()
     }, [search.violation])
     function setVlt(violation: ViolationType) {
         setViolationIds(violationIds.filter(v => v.id !== violation.id))
@@ -142,7 +144,7 @@ export default function StudentAndViolationInput() {
                                     <TableRow key={i}>
                                         <TableCell>
                                             <div className="text-lg font-semibold">
-                                                {student.name}
+                                                {student.name?.toUpperCase()}
                                             </div>
                                             <p>{student.national_student_id}</p>
                                         </TableCell>
@@ -208,19 +210,92 @@ export default function StudentAndViolationInput() {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col flex-grow w-full min-h-screen">
+            <div className="flex flex-col min-h-56 flex-grow w-full">
                 <div className="flex gap-6 items-center">
-                <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
-                    Detail Pelanggaran
-                </h1>
-                <Button onClick={() => { setStudentIds([]); setViolationIds([]); }}><RefreshCwIcon /></Button>
+                    <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
+                        Detail Pelanggaran
+                    </h1>
+                    <Button onClick={() => { setStudentIds([]); setViolationIds([]); }}><RefreshCwIcon /></Button>
                 </div>
                 <Summary students={studentIds} violations={violationIds} setStudentIds={setStd} setViolationIds={setVlt} />
             </div>
-            <Label className="text-2xl">Catatan</Label>
-            <Textarea value={note} onChange={(e) => setNote(e.target.value)} />
             <div className="flex w-full">
-                <Button onClick={handleSubmit} className="w-full h-56">Tambahkan Pelanggaran</Button>
+                <Button onClick={() => {
+                    const stdIds = studentIds.map((s) => s.id)
+                    const vltIds = violationIds.map((v) => v.id)
+                    if (stdIds.length === 0 || vltIds.length === 0) {
+                        toaster.toast({ description: 'Data Harus Lengkap', title: 'Gagal', variant: 'destructive' })
+                        return;
+                    }
+                    setDialogVisibility(true)
+                }
+                } className="w-full">Tambahkan Pelanggaran</Button>
+                <Dialog open={dialogVisibility} onOpenChange={setDialogVisibility}>
+                    <DialogContent className="max-w-3xl text-black">
+                        <DialogHeader>
+                            <DialogTitle>Apa Anda yakin data sudah benar</DialogTitle>
+                            <DialogDescription asChild>
+                                <div className="p-2 w-full flex flex-col gap-4">
+                                    <div className="grid grid-cols-2 text-black gap-8">
+                                        <div>
+                                            <div className="font-semibold text-center">Nama Siswa</div>
+                                            <div className="flex max-h-60 overflow-y-auto w-full flex-col gap-2">
+                                                {studentIds.map((student, i) => (
+                                                    <div key={i} className="flex">
+                                                        <div className="w-full whitespace-nowrap">
+                                                            {truncateName(student.name?.toUpperCase() ?? '',30)} - <span className="text-slate-400">{student.national_student_id}</span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            {/* <div className="font-semibold text-center">Nama Pelanggaran</div> */}
+                                            <div className="flex flex-col gap-2">
+                                                <div className="grid font-semibold grid-cols-4">
+                                                    <div className="col-span-3">
+                                                        Nama Pelanggaran
+                                                    </div>
+                                                    <div className="w-full flex justify-center">
+                                                        Poin
+                                                    </div>
+                                                </div>
+                                                <div className="flex max-h-52 overflow-y-auto flex-col gap-2">
+                                                    {violationIds.map((violation, i) => (
+                                                        <div key={i} className="grid grid-cols-4">
+                                                            <div className="col-span-3 border-r-2 border-slate-400">
+                                                                {violation.name}
+                                                            </div>
+                                                            <div className="w-full flex justify-center items-center font-light">
+                                                                {violation.point} Poin
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="grid font-semibold grid-cols-4">
+                                                    <div className="col-span-3">
+                                                        Total
+                                                    </div>
+                                                    <div className="w-full flex justify-center">
+                                                        {violationIds.reduce((acc, curr) => acc + curr.point, 0)} Poin
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-2 text-black">
+                                        <div className="font-semibold">Catatan</div>
+                                        <Textarea value={note} onChange={(e) => setNote(e.target.value)} />
+                                    </div>
+                                    <div className="flex gap-3 justify-center">
+                                        <Button onClick={() => handleSubmit()}>Tambahkan</Button>
+                                        <Button variant={'outline'} onClick={() => setDialogVisibility(false)}>Batal</Button>
+                                    </div>
+                                </div>
+                            </DialogDescription>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     );

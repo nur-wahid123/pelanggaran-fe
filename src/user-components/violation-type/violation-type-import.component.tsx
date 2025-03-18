@@ -145,7 +145,7 @@ export default function ImportViolationType({ reFetch }: { reFetch: () => void }
             reFetch();
             setSuccess(e => e + 1);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             let errMsg = error as any;
             errMsg = errMsg.status === 400 ? errMsg.response.data.message[0] : errMsg.response.data.message;
             toaster.toast({
