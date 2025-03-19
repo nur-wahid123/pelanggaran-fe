@@ -7,53 +7,43 @@ import { useToast } from "@/hooks/use-toast";
 import { ClassObject } from "@/objects/class.object";
 import AddClass from "@/user-components/class-object/add-class.component";
 import EditClass from "@/user-components/class-object/update-class.component";
-import PaginationSelf, { PaginateContentProps } from "@/user-components/ui/pagination";
+import useInfiniteScroll from "@/user-components/hook/useInfiniteScroll.hook";
+import { PaginateContentProps } from "@/user-components/ui/pagination";
 import SearchBar from "@/user-components/ui/search-bar";
 import { axiosInstance } from "@/util/request.util";
 import { Trash } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export default function Page() {
     const [search, setSearch] = useState("");
     const [pagination, setPagination] = useState<PaginateContentProps>({});
-    const [classes, setClasses] = useState<ClassObject[]>([]);
+    const [pageNum, setPageNum] = useState(1);
     const toaster = useToast();
-    const fetchData = useCallback(async (
-        start: number,
-        limit: number,
-    ) => {
-        try {
-            const res = await axiosInstance.get(
-                `${ENDPOINT.MASTER_CLASS}?page=${start}&take=${limit}&search=${search}`
-            );
-
-            if (Array.isArray(res.data.data)) {
-                setClasses(res.data.data);
+    const observer = useRef<IntersectionObserver | null>(null);
+    const { data: classes, error, hasMore, loading } = useInfiniteScroll<ClassObject>({ filter: { search }, take: 10, url: ENDPOINT.MASTER_CLASS, page: pageNum });
+    const lastElementRef = useCallback((node: HTMLTableRowElement | null) => {
+        if (loading) return;
+        if (observer.current) observer.current.disconnect();
+        observer.current = new IntersectionObserver((entries) => { 
+            if (entries[0].isIntersecting && hasMore) {
+                setPageNum((prev) => prev + 1);
             }
-            if (res.data.pagination) {
-                setPagination(res.data.pagination);
-            }
-        } catch (error) {
-            console.error("Error fetching violation:", error);
-        }
-    }
-        , [search]);
-    useEffect(() => {
-        fetchData(pagination?.page ?? 1, pagination?.take ?? 20);
-    }, [fetchData, pagination?.page, pagination?.take, search]);
+        })
+        if (node) observer.current.observe(node);
+    }, [loading, hasMore]);
 
-    function handleSearch(query: string) {
+    const handleSearch = useCallback(function (query: string) {
         if (query !== search) {
-            setPagination({ ...pagination, page: 1 })
+            setPageNum(1);
             setSearch(query);
         }
-    }
+    },[search]);
 
-    function reFetch() {
-        fetchData(1, pagination?.take ?? 20);
-    }
+    const reFetch = useCallback(function () {
+        setPageNum(1);
+    },[]);
 
-    function handleDelete(id: number) {
+    const handleDelete = useCallback(function (id: number) {
         const thisClass = classes.find((c) => c.id === id);
         if (!thisClass) return;
         if (thisClass.students && thisClass.students.length > 0) {
@@ -83,7 +73,7 @@ export default function Page() {
                     variant: "destructive",
                 })
             });
-    }
+    },[classes]);
 
     return (
         <div className="p-4">
@@ -111,7 +101,7 @@ export default function Page() {
                     </div>
                     <p className="w-full line-clamp-1">dari {pagination.item_count} data</p>
                     <AddClass reFetch={reFetch} />
-                    <PaginationSelf pagination={pagination} fetchData={fetchData} />
+                    {/* <PaginationSelf pagination={pagination} fetchData={fetchData} /> */}
                 </div>
                 <div>
                     <Table className="w-full table-fixed">
@@ -125,20 +115,36 @@ export default function Page() {
                         </TableHeader>
                         <TableBody
                         >
-                            {classes.map((classObject, index) => {
-                                return (
-                                    <TableRow key={index}>
-                                        <TableCell>{index + 1}</TableCell>
-                                        <TableCell>
-                                            {classObject.name}
-                                        </TableCell>
-                                        <TableCell>{classObject.students?.length}</TableCell>
-                                        <TableCell className="flex gap-2 items-center">
-                                            <EditClass classId={classObject.id} reFetch={reFetch} />
-                                            <Button onClick={() => { handleDelete(classObject.id ?? 0) }}>Hapus <Trash className="w-4"></Trash></Button>
-                                        </TableCell>
-                                    </TableRow>
-                                )
+                            {classes.map((classObject, index) => {                                
+                                if (classes.length === index + 1) {
+                                    return (
+                                        <TableRow ref={lastElementRef} key={index}>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>
+                                                {classObject.name}
+                                            </TableCell>
+                                            <TableCell>{classObject.students?.length}</TableCell>
+                                            <TableCell className="flex gap-2 items-center">
+                                                <EditClass classId={classObject.id} reFetch={reFetch} />
+                                                <Button onClick={() => { handleDelete(classObject.id ?? 0) }}>Hapus <Trash className="w-4"></Trash></Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                } else {
+                                    return (
+                                        <TableRow key={index}>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>
+                                                {classObject.name}
+                                            </TableCell>
+                                            <TableCell>{classObject.students?.length}</TableCell>
+                                            <TableCell className="flex gap-2 items-center">
+                                                <EditClass classId={classObject.id} reFetch={reFetch} />
+                                                <Button onClick={() => { handleDelete(classObject.id ?? 0) }}>Hapus <Trash className="w-4"></Trash></Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                }
                             })}
                         </TableBody>
                     </Table>

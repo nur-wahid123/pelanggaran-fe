@@ -19,29 +19,16 @@ export function DatePickerWithRange({
   setOutDate,
   startDate,
   finishDate,
-}: {attr?: React.HTMLAttributes<HTMLDivElement>, finishDate?: Date, startDate?: Date, setOutDate: (from: Date, to: Date) => void}) {
+}: {attr?: React.HTMLAttributes<HTMLDivElement>, finishDate: Date, startDate: Date, setOutDate: (from: Date, to: Date) => void}) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 30),
+    from: startDate,
+    to: finishDate,
   })
   React.useEffect(() => {
     if (date) {
       setOutDate(date.from ? date.from : new Date(), date.to ? date.to : new Date())
     }
   }, [date])
-
-  React.useEffect(() => {
-    if (startDate) {
-      setDate({...date,
-        from: startDate,
-      })
-    }
-    if (finishDate) {
-      setDate({...date,
-        from: finishDate,
-      })
-    }
-  }, [])
 
   return (
     <div className={cn("grid gap-2", attr?.className)}>

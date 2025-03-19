@@ -19,48 +19,48 @@ import { DateRange, formatDate, formatDateToExactString, formatDateToExactString
 import { axiosInstance } from "@/util/request.util";
 import { AlertTriangle, PlusIcon, Trash } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function Page() {
     const [search, setSearch] = useState("");
-    const thisMnth = thisMonth();
+    const thisMnth = useMemo(() => thisMonth(),[]);
     const [dateRange, setDateRange] = useState<DateRange>({ start_date: formatDate(thisMnth.startOfMonth), finish_date: formatDate(thisMnth.endOfMonth) });
-    const [pagination, setPagination] = useState<PaginateContentProps>({});
+    const [pagination, setPagination] = useState<PaginateContentProps>({page: 1, take: 20});
     const [violations, setViolation] = useState<Violation[]>([]);
     const [students, setStudent] = useState<Student[]>([]);
     const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
     const [violationTypeEnum, setViolationTypeEnum] = useState<ViolationTypeEnum>(ViolationTypeEnum.COLLECTION);
-    const toaster = useToast();
-    const fetchData = useCallback(async (
+    const fetchData = useCallback((
         start: number,
         limit: number,
     ) => {
         const param = { page: start, take: limit, search: search, type: violationTypeEnum, ...dateRange };
         try {
-            const res = await axiosInstance.get(
+            axiosInstance.get(
                 `${ENDPOINT.MASTER_VIOLATION}`
-                , { params: param });
-
-            if (Array.isArray(res.data.data)) {
-                switch (violationTypeEnum) {
-                    case ViolationTypeEnum.COLLECTION:
+                , { params: param }).then((res) => {
+                    if (Array.isArray(res.data.data)) {
+                        switch (violationTypeEnum) {
+                            case ViolationTypeEnum.COLLECTION:
+                                setViolation(res.data.data);
+                                break;
+                            case ViolationTypeEnum.PER_STUDENT:
+                                setStudent(res.data.data);
+                                break;
+                            case ViolationTypeEnum.PER_VIOLATION_TYPE:
+                                setViolationTypes(res.data.data);
+                                break;
+                        
+                            default:
+                                break;
+                        }
                         setViolation(res.data.data);
-                        break;
-                    case ViolationTypeEnum.PER_STUDENT:
-                        setStudent(res.data.data);
-                        break;
-                    case ViolationTypeEnum.PER_VIOLATION_TYPE:
-                        setViolationTypes(res.data.data);
-                        break;
-                
-                    default:
-                        break;
-                }
-                setViolation(res.data.data);
-            }
-            if (res.data.pagination) {
-                setPagination(res.data.pagination);
-            }
+                    }
+                    if (res.data.pagination) {
+                        setPagination(res.data.pagination);
+                    }
+                });
+
         } catch (error) {
             console.error("Error fetching violation:", error);
         }
@@ -68,22 +68,18 @@ export default function Page() {
         , [search, dateRange, violationTypeEnum]);
     useEffect(() => {
         fetchData(pagination?.page ?? 1, pagination?.take ?? 20);
-    }, [fetchData, pagination?.page, pagination?.take, search, dateRange, violationTypeEnum]);
+    }, [fetchData]);
 
-    function handleSearch(query: string) {
+    const handleSearch = useCallback((query: string) => {
         if (query !== search) {
             setPagination({ ...pagination, page: 1 })
             setSearch(query);
         }
-    }
+    },[search, pagination]);
 
-    function reFetch() {
-        fetchData(1, pagination?.take ?? 20);
-    }
-
-    function setDate(from: Date, to: Date) {
+    const setDate = useCallback((from: Date, to: Date) => {
         setDateRange({ start_date: formatDate(from), finish_date: formatDate(to) });
-    }
+    },[]);
 
     return (
         <div className="p-4">
@@ -110,11 +106,11 @@ export default function Page() {
                         </Select>
                     </div>
                     <p className="w-full line-clamp-1">dari {pagination.item_count} data</p>
-                    <DatePickerWithRange setOutDate={setDate} />
+                    <DatePickerWithRange startDate={new Date(dateRange.start_date)} finishDate={new Date(dateRange.finish_date)} setOutDate={setDate} />
                     <Link href={'/dashboard/input-violation'}>
                         <Button className="flex gap-3 shadow hover:shadow-md" variant="outline"><AlertTriangle className="w-4" />Input Pelanggaran <PlusIcon className="w-4" /></Button>
                     </Link>
-                    <PaginationSelf pagination={pagination} fetchData={fetchData} />
+                    {/* <PaginationSelf pagination={pagination} fetchData={fetchData} /> */}
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {Object.entries(ViolationTypeEnum).map(([key, value], index) => {
