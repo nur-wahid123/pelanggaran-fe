@@ -137,84 +137,86 @@ export default function Page() {
         <Button onClick={handleDownload}>Download template <Download /></Button>
         <ImportStudent reFetch={reFetch} />
       </div>
-      <Table>
-        <TableHeader className="bg-slate-100">
-          <TableRow>
-            {tableHeader.map((thead, i) => (
-              <TableHead key={i}>{thead}</TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((student, i) => {
-            if (data.length === i + 1) {
-              return (
-                <TableRow ref={lastElementRef} key={i}>
-                  <TableCell>
-                    <div className="font-semibold">{student.name}</div>
-                    <div className="text-sm text-slate-500">
-                      {student.national_student_id}
-                    </div>
-                  </TableCell>
-                  <TableCell>{student.school_student_id}</TableCell>
-                  <TableCell>{student.student_class?.name}</TableCell>
-                  <TableCell>{student.violations?.length}</TableCell>
-                  <TableCell>
-                    <Link
-                      href={`/dashboard/master/student/${student.national_student_id}`}
-                    >
-                      <Button disabled={isLoading}>
-                        <Eye />
-                      </Button>
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              )
-            } else {
-              return (
-                <TableRow key={i}>
-                  <TableCell>
-                    <div className="font-semibold">{student.name}</div>
-                    <div className="text-sm text-slate-500">
-                      {student.national_student_id}
-                    </div>
-                  </TableCell>
-                  <TableCell>{student.school_student_id}</TableCell>
-                  <TableCell>{student.student_class?.name}</TableCell>
-                  <TableCell>{student.violations?.length}</TableCell>
-                  <TableCell>
-                    <Link
-                      href={`/dashboard/master/student/${student.national_student_id}`}
-                    >
-                      <Button disabled={isLoading}>
-                        <Eye />
-                      </Button>
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              )
-            }
-          })}
-          {isLoading && (
+      <div className="max-h-[31rem] overflow-y-auto">
+        <Table>
+          <TableHeader className="bg-slate-100">
             <TableRow>
-              <TableCell colSpan={tableHeader.length}>
-                <div className="flex justify-center">
-                  Loading.....
-                </div>
-              </TableCell>
-            </TableRow>)
-          }
-          {data.length === 0 && !isLoading && (
-            <TableRow>
-              <TableCell colSpan={tableHeader.length}>
-                <div className="flex justify-center">
-                  {filter.search !== "" ? "Data Tidak Ditemukan" : "Data Kosong"}
-                </div>
-              </TableCell>
+              {tableHeader.map((thead, i) => (
+                <TableHead key={i}>{thead}</TableHead>
+              ))}
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {data.map((student, i) => {
+              if (data.length === i + 1) {
+                return (
+                  <TableRow ref={lastElementRef} key={i}>
+                    <TableCell>
+                      <div className="font-semibold">{student.name}</div>
+                      <div className="text-sm text-slate-500">
+                        {student.national_student_id}
+                      </div>
+                    </TableCell>
+                    <TableCell>{student.school_student_id}</TableCell>
+                    <TableCell>{student.student_class?.name}</TableCell>
+                    <TableCell>{student.violations?.length}</TableCell>
+                    <TableCell>
+                      <Link
+                        href={`/dashboard/master/student/${student.national_student_id}`}
+                      >
+                        <Button disabled={isLoading}>
+                          <Eye />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                )
+              } else {
+                return (
+                  <TableRow key={i}>
+                    <TableCell>
+                      <div className="font-semibold">{student.name}</div>
+                      <div className="text-sm text-slate-500">
+                        {student.national_student_id}
+                      </div>
+                    </TableCell>
+                    <TableCell>{student.school_student_id}</TableCell>
+                    <TableCell>{student.student_class?.name}</TableCell>
+                    <TableCell>{student.violations?.length}</TableCell>
+                    <TableCell>
+                      <Link
+                        href={`/dashboard/student/${student.national_student_id}`}
+                      >
+                        <Button disabled={isLoading}>
+                          <Eye />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                )
+              }
+            })}
+            {isLoading && (
+              <TableRow>
+                <TableCell colSpan={tableHeader.length}>
+                  <div className="flex justify-center">
+                    Loading.....
+                  </div>
+                </TableCell>
+              </TableRow>)
+            }
+            {data.length === 0 && !isLoading && (
+              <TableRow>
+                <TableCell colSpan={tableHeader.length}>
+                  <div className="flex justify-center">
+                    {filter.search !== "" ? "Data Tidak Ditemukan" : "Data Kosong"}
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }

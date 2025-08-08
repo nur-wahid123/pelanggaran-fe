@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Redo, RefreshCcwDotIcon } from "lucide-react"
+import { Plus, RefreshCcwDotIcon } from "lucide-react"
 import ExcelJS, { CellValue } from "exceljs";
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
@@ -127,7 +127,7 @@ export default function ImportStudent({ reFetch }: { reFetch: () => void }) {
             toaster.toast({
                 title: "Gagal Memasukkan Siswa",
                 variant: "destructive",
-                description: `Gagal dimasukkan database, alasan ${error}`
+                description: `Gagal dimasukkan database, alasan ${errMsg}`
             })
             setBool({ ...bool, loading: false });
         }

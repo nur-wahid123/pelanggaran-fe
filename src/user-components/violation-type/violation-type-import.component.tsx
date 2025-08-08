@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Download, Plus, Redo, RefreshCcwDotIcon } from "lucide-react"
+import { Download, Plus, RefreshCcwDotIcon } from "lucide-react"
 import ExcelJS, { CellValue } from "exceljs";
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
@@ -151,7 +151,7 @@ export default function ImportViolationType({ reFetch }: { reFetch: () => void }
             toaster.toast({
                 title: "Gagal Memasukkan Pelanggaran",
                 variant: "destructive",
-                description: `Gagal dimasukkan database, alasan ${error}`
+                description: `Gagal dimasukkan database, alasan ${errMsg}`
             })
             setBool({ ...bool, loading: false });
         }
@@ -183,14 +183,13 @@ export default function ImportViolationType({ reFetch }: { reFetch: () => void }
                                 accept=".xls,.xlsx"
                                 className="file-input file-input-bordered"
                                 id="file"
-                                // value={files ? files[0].name : ""}
                                 onChange={handleFileChange}
                             />
                             <p>Berhasil membaca {fileData.length} data siswa</p>
-                            <Button type="submit" onClick={e => handleSubmit()}>
+                            <Button type="submit" onClick={() => handleSubmit()}>
                                 Baca file Excell
                             </Button>
-                            <Button type="submit" onClick={e => handleDownloadPdf()}>
+                            <Button type="submit" onClick={() => handleDownloadPdf()}>
                                 Pisahkan data
                             </Button>
                             <div className="flex w-full justify-between items-center">

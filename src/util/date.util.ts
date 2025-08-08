@@ -75,7 +75,7 @@ export function formatDateToExactStringAndTime(date: Date) {
   const day = date.getDate()
   const month_name = convertMonthNumberToMonthName(date.getMonth())
   const year = date.getFullYear()
-  return `${day} ${month_name} ${year} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+  return `${day} ${month_name} ${year} ${formatDateToExactTime(date)}`
 }
 
 export class DateRange {

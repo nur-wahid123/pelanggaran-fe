@@ -9,9 +9,9 @@ export interface Violation {
   
     note?: string;
   
-    creator?: User;
+    creator: User;
   
-    students?: Student[];
+    students: Student[];
   
     violation_types: ViolationType[];
 }

@@ -24,12 +24,12 @@ export default function SearchBar({
   return (
     <div className="flex items-center">
       <div className="flex items-center">
-        <div className="relative rounded-lg bg-gray-100 dark:bg-gray-800 w-48">
+        <div className="relative rounded-lg bg-gray-100 dark:bg-gray-800 w-72">
           <Input
             type="text"
             disabled={isLoading ? isLoading : false}
             placeholder="Cari..."
-            className="rounded-lg appearance-none w-48 pl-8 text-xs"
+            className="rounded-lg appearance-none w-72 pl-8 text-xs"
             onChange={(e) => { handleChange(e) }}
             value={query}
           />

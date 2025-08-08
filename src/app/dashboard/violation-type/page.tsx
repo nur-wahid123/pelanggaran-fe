@@ -1,57 +1,30 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import ENDPOINT from "@/config/url";
 import { useToast } from "@/hooks/use-toast";
 import { ViolationType } from "@/objects/violation-type.object";
-import PaginationSelf, { PaginateContentProps } from "@/user-components/ui/pagination";
+import useInfiniteScroll from "@/user-components/hook/useInfiniteScroll.hook";
 import SearchBar from "@/user-components/ui/search-bar";
 import AddViolationType from "@/user-components/violation-type/add-violation-type.component";
 import EditViolationType from "@/user-components/violation-type/update-violation-type.component";
 import ImportViolationType from "@/user-components/violation-type/violation-type-import.component";
 import { axiosInstance } from "@/util/request.util";
 import { Trash } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Page() {
     const [search, setSearch] = useState("");
-    const [pagination, setPagination] = useState<PaginateContentProps>({});
-    const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
     const toaster = useToast();
-    const fetchData = useCallback(async (
-        start: number,
-        limit: number,
-    ) => {
-        try {
-            const res = await axiosInstance.get(
-                `${ENDPOINT.MASTER_VIOLATION_TYPE}?page=${start}&take=${limit}&search=${search}`
-            );
-
-            if (Array.isArray(res.data.data)) {
-                setViolationTypes(res.data.data);
-            }
-            if (res.data.pagination) {
-                setPagination(res.data.pagination);
-            }
-        } catch (error) {
-            console.error("Error fetching violation:", error);
-        }
-    }
-        , [search]);
-    useEffect(() => {
-        fetchData(pagination?.page ?? 1, pagination?.take ?? 20);
-    }, [fetchData, pagination?.page, pagination?.take, search]);
-
+    const { data: violationTypes, loading,ref } = useInfiniteScroll<ViolationType,HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
     function handleSearch(query: string) {
         if (query !== search) {
-            setPagination({ ...pagination, page: 1 })
             setSearch(query);
         }
     }
 
     function reFetch() {
-        fetchData(1, pagination?.take ?? 20);
+        setSearch('');
     }
 
     function handleDelete(id: number) {
@@ -92,30 +65,12 @@ export default function Page() {
                 Jenis Pelanggaran
             </h1>
             <div className="w-full flex flex-col gap-4">
-                {/* ({flatData.length} of {totalDBRowCount} rows fetched) */}
                 <div className="flex gap-6 items-center justify-between">
                     <SearchBar onSearch={handleSearch} />
-                    <div className="flex gap-4 items-center">
-                        <p>Rows</p>
-                        <Select value={pagination?.take?.toString()} onValueChange={(e) => setPagination({ ...pagination, take: Number(e), page: 1 })}>
-                            <SelectTrigger className="w-[90px]">
-                                <SelectValue placeholder="Rows" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {[10, 20, 30, 40, 50].map((item) => (
-                                    <SelectItem key={item} value={item.toString()}>
-                                        {item}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <p className="w-full line-clamp-1">dari {pagination.item_count} data</p>
                     <AddViolationType reFetch={reFetch} />
                     <ImportViolationType reFetch={reFetch} />
-                    <PaginationSelf pagination={pagination} fetchData={fetchData} />
                 </div>
-                <div>
+                <div className="max-h-[31rem] overflow-y-auto">
                     <Table className="w-full table-fixed">
                         <TableHeader className="bg-slate-100 text-black">
                             <TableRow>
@@ -126,12 +81,13 @@ export default function Page() {
                                 <TableHead>Aksi</TableHead>
                             </TableRow>
                         </TableHeader>
-                            <TableBody
-                            >
-                                {violationTypes.map((violationType, index) => {
+                        <TableBody
+                        >
+                            {violationTypes.map((violationType, index) => {
+                                if (violationTypes.length === index + 1) {
                                     return (
-                                        <TableRow key={index}>
-                                            <TableCell>{index+1}</TableCell>
+                                        <TableRow ref={ref} key={index}>
+                                            <TableCell>{index + 1}</TableCell>
                                             <TableCell>{violationType.name}</TableCell>
                                             <TableCell>{violationType.point}</TableCell>
                                             <TableCell>{violationType.violations.length}</TableCell>
@@ -141,11 +97,27 @@ export default function Page() {
                                             </TableCell>
                                         </TableRow>
                                     )
-                                })}
-                            </TableBody>
-                        </Table>
-                    </div>
+                                } else {
+                                    return (
+                                        <TableRow key={index}>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>{violationType.name}</TableCell>
+                                            <TableCell>{violationType.point}</TableCell>
+                                            <TableCell>{violationType.violations.length}</TableCell>
+                                            <TableCell className="flex gap-2 items-center">
+                                                <EditViolationType violationTypeId={violationType.id} reFetch={reFetch} />
+                                                <Button onClick={() => { handleDelete(violationType.id ?? 0) }}>Hapus <Trash className="w-4"></Trash></Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                }
+                            })}
+                            {loading && <TableRow><TableCell colSpan={4} className="text-center">Loading...</TableCell></TableRow>}
+                            {!loading && violationTypes.length === 0 && <TableRow><TableCell colSpan={4} className="text-center">{search === '' ? 'Data Kosong' : 'Data Tidak Ditemukan'}</TableCell></TableRow>}
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
+        </div>
     )
 }

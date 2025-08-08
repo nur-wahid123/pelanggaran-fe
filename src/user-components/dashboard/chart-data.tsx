@@ -1,13 +1,11 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -17,7 +15,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import { formatDateToExactString, formatRangeToExactString } from "@/util/date.util"
+import { formatRangeToExactString } from "@/util/date.util"
 import { useCallback, useEffect, useState } from "react"
 import { axiosInstance } from "@/util/request.util"
 import ENDPOINT from "@/config/url"
@@ -72,7 +70,7 @@ export function ChartData({ from, to }: Parameters) {
                     }
                 }}>
                     <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select a fruit" />
+                        <SelectValue placeholder="Pilih Rentang" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>

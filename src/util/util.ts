@@ -1,4 +1,3 @@
-import ckie from 'js-cookie'
 
 export function toTitleCase(str: string): string {
     return str
@@ -7,12 +6,6 @@ export function toTitleCase(str: string): string {
             /\w\S*/g,
             (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
         );
-}
-
-export function isLogged(): boolean {
-    const token = ckie.get('token')
-    if (token) return true
-    return false
 }
 
 export function truncateName(name: string, limit: number): string {

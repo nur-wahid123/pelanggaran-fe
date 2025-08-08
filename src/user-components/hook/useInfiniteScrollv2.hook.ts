@@ -8,7 +8,7 @@ class useInfiniteScrollParam {
     filter!: object
 }
 
-export default function useInfiniteScroll<T,T2>({ filter, take, url }: useInfiniteScrollParam) {
+export default function useInfiniteScrollV2<T,T2>({ filter, take, url }: useInfiniteScrollParam) {
     const [data, setData] = useState<T[]>([]);
     const memoizedFilter = useMemo(() => filter, [JSON.stringify(filter)]);
     const [loading, setLoading] = useState(false);
@@ -31,7 +31,6 @@ export default function useInfiniteScroll<T,T2>({ filter, take, url }: useInfini
         setData([]);
         setHasMore(true);
         setError(false);
-        setPage(1);
     }, [memoizedFilter]);
 
     useEffect(() => {

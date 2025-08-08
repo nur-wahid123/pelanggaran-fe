@@ -15,6 +15,7 @@ import axios from "axios"
 import ENDPOINT from "@/config/url"
 import { Eye, EyeOff } from "lucide-react"
 import { useRouter } from "next/navigation"
+import Cookies from 'js-cookie'
 
 export function LoginForm({
   className,
@@ -32,17 +33,20 @@ export function LoginForm({
     await axios.post(`${ENDPOINT.LOGIN}`, state)
       .then(async res => {
         const token = res.data.data.access_token;
-        
+
         if (token) {
+          console.log(token);
+
           try {
-            await fetch('/api/auth/set-cookie', { method: 'POST', body: JSON.stringify({ token }) });
-          } catch (error) {            
+            // Cookies.set('token', token);   
+            localStorage.setItem('token', token);
+          } catch (error) {
             console.log(error);
           }
         } else {
           console.error("Token is undefined");
           return;
-        }        
+        }
         toaster.toast({ title: "Success", description: "Berhasil Login", variant: "default" })
         router.push("/dashboard")
       })
@@ -78,20 +82,16 @@ export function LoginForm({
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
                   </div>
-                  <Input id="password" type="password" required value={state.password} onChange={(e) => setState({ ...state, password: e.target.value })} />
-                  {isView ? (
-                    <Eye
-                      className="absolute right-4 top-7 z-10 cursor-pointer text-gray-400 w-5"
-                      onClick={() => {
-                        setIsView(!isView)
-                      }}
-                    />
-                  ) : (
-                    <EyeOff
-                      className="absolute right-4 top-7 z-10 cursor-pointer text-gray-300 w-5"
-                      onClick={() => setIsView(!isView)}
-                    />
-                  )}
+                  <div className="flex items-center gap-3">
+                    <Input id="password" type={isView ? "text" : "password"} required value={state.password} onChange={(e) => setState({ ...state, password: e.target.value })} />
+                    <Button type="button" onClick={() => setIsView(!isView)}>
+                    {isView ? (
+                      <Eye/>
+                    ) : (
+                      <EyeOff/>
+                    )}
+                    </Button>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full">
                   Login

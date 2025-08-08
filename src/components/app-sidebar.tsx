@@ -3,15 +3,12 @@
 import * as React from "react"
 import {
   Building,
-  Frame,
   GalleryVerticalEnd,
   LayoutDashboard,
   List,
-  Map,
-  PieChart,
-  PlusCircle,
   Tag,
   User,
+  Users,
 } from "lucide-react"
 
 import { NavProjects } from "@/components/nav-projects"
@@ -24,6 +21,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { RoleEnum } from "@/enums/role.enum"
+import { axiosInstance } from "@/util/request.util"
+import ENDPOINT from "@/config/url"
 
 // This is sample data.
 const data = {
@@ -128,11 +128,6 @@ const data = {
       url: "/dashboard/violation-type",
       icon: Tag,
     },
-    // {
-    //   name: "Input Pelanggaran",
-    //   url: "/dashboard/input-violation",
-    //   icon: PlusCircle,
-    // },
     {
       name: "Kelas",
       url: "/dashboard/class-page",
@@ -144,9 +139,35 @@ const data = {
       icon: User,
     },
   ],
+  adminPage: [
+    {
+      name: "User",
+      url: "/dashboard/user",
+      icon: Users,
+    },
+  ]
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = React.useState({
+    username: "",
+    name: "",
+    sub: 0,
+    email: "",
+    role: RoleEnum.USER
+  })
+  React.useEffect(() => {
+    axiosInstance.get(ENDPOINT.ME).then(res => {
+      const getUser: {
+        username: string,
+        name: string,
+        sub: number,
+        email: string,
+        role: RoleEnum
+      } = res.data.data
+      setUser(getUser);
+    })
+  }, []);
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -154,10 +175,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* <NavMain items={data.navMain} /> */}
-        <NavProjects projects={data.projects} />
+        <NavProjects title="Projects" projects={data.projects} />
+        {user.role === RoleEnum.ADMIN && <NavProjects title="Halaman Admin" projects={data.adminPage} />}
+
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

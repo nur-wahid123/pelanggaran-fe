@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ENDPOINT from "@/config/url";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardResponseDto } from "@/objects/dashboard-response.dto";
-import { DateRange, formatDate, formatDateToExactString, thisMonth, thisWeek } from "@/util/date.util";
+import { DateRange, formatDate, formatDateToExactString, thisMonth } from "@/util/date.util";
 import { axiosInstance } from "@/util/request.util";
 import { useCallback, useEffect, useState } from "react";
 import { DatePickerWithRange } from "./date-picker";
@@ -53,7 +53,7 @@ export default function Statistics() {
           <TabsContent value="this_month">
           </TabsContent>
           <TabsContent className="flex mt-0 items-center" value="custom">
-            <DatePickerWithRange setOutDate={setDate} />
+            <DatePickerWithRange startDate={new Date(dateRange.start_date)} finishDate={new Date(dateRange.finish_date)} setOutDate={setDate} />
           </TabsContent>
         </Tabs>
         <div className="text-md text-muted-foreground flex items-center w-fit whitespace-nowrap font-semibold">

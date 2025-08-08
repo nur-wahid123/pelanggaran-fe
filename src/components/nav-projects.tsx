@@ -27,8 +27,9 @@ import {
 import Link from "next/link"
 
 export function NavProjects({
-  projects,
+  projects,title
 }: {
+  title:string,
   projects: {
     name: string
     url: string
@@ -39,7 +40,7 @@ export function NavProjects({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>

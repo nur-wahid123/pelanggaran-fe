@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
   },
   env: {
     BASE_URL: process.env.BASE_URL
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/.well-known/appspecific/com.chrome.devtools.json',
+        destination: '/404', // or any dummy route
+      },
+    ];
   }
 };
 
