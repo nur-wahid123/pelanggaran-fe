@@ -9,6 +9,12 @@ const ENDPOINT = {
     MASTER_STUDENT: `${CONFIG.BASE_URL}/student/list`,
     EXPORT_STUDENT: `${CONFIG.BASE_URL}/student/export`,
 
+    //Image
+    UPLOAD_IMAGE: `${CONFIG.BASE_URL}/image/upload`,
+    DELETE_IMAGE: `${CONFIG.BASE_URL}/image/delete`,
+    LIST_IMAGE: `${CONFIG.BASE_URL}/image/list`,
+    DETAIL_IMAGE: `${CONFIG.BASE_URL}/image/get`,
+
     //Dashboard
     DASHBOARD_DATA: `${CONFIG.BASE_URL}/dashboard/data`,
     CHART_DATA: `${CONFIG.BASE_URL}/dashboard/chart-data`,

@@ -4,6 +4,8 @@ import { ViolationType } from "./violation-type.object";
 
 export interface Violation {
     id?: number;
+
+    imageGroupId?: number;
   
     date?: Date;
   

@@ -13,16 +13,20 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { truncateName } from "@/util/util";
 import useInfiniteScroll from "../hook/useInfiniteScroll.hook";
 import SearchBar from "../ui/search-bar";
+import UploadViolationImages from "../violation/upload-violation-image.component";
+import { Progress } from "@/components/ui/progress";
 
 export default function StudentAndViolationInput() {
+    const [files, setFiles] = useState<File[]>([]);
     const [studentIds, setStudentIds] = useState<Student[]>([]);
     const [violationIds, setViolationIds] = useState<ViolationType[]>([]);
     const [search, setSearch] = useState<{ student: string, violation: string }>({ student: '', violation: '' });
     const [note, setNote] = useState<string>('');
     const toaster = useToast()
+    const [progress, setProgress] = useState(0);
     const [dialogVisibility, setDialogVisibility] = useState(false);
-    const { data: dataStudents, loading: loadingStudent, ref:refS } = useInfiniteScroll<Student,HTMLTableRowElement>({ filter: { search: search.student }, take: 20, url: ENDPOINT.MASTER_STUDENT })
-    const { data: dataViolations, loading: loadingViolationTypes, ref:refV } = useInfiniteScroll<ViolationType,HTMLTableRowElement>({ filter: { search: search.violation }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
+    const { data: dataStudents, loading: loadingStudent, ref: refS } = useInfiniteScroll<Student, HTMLTableRowElement>({ filter: { search: search.student }, take: 20, url: ENDPOINT.MASTER_STUDENT })
+    const { data: dataViolations, loading: loadingViolationTypes, ref: refV } = useInfiniteScroll<ViolationType, HTMLTableRowElement>({ filter: { search: search.violation }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
     const handleSubmit = async () => {
         const stdIds = studentIds.map((s) => s.id)
         const vltIds = violationIds.map((v) => v.id)
@@ -30,20 +34,52 @@ export default function StudentAndViolationInput() {
             toaster.toast({ description: 'Data Harus Lengkap', title: 'Gagal', variant: 'destructive' })
             return;
         }
+        let imageId;
+        try {
+            const fd = new FormData();
+            files.forEach((f) => fd.append('files', f));
+            const res = await axiosInstance.post(ENDPOINT.UPLOAD_IMAGE, fd, {
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = (Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 0)) / 100) * 50;
+                    setProgress(percentCompleted);
+                },
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            console.log(res);
+
+            imageId = res.data.data
+        } catch (error) {
+            setProgress(0)
+            console.log(error);
+            toaster.toast({ description: 'Data Gagal Di Input', title: 'Gagal', variant: 'destructive' })
+            setDialogVisibility(false)
+            return
+        }
         const body = {
             student_ids: stdIds,
             violation_type_ids: vltIds,
-            note
+            note,
+            image_id: imageId
         }
         try {
-            await axiosInstance.post(ENDPOINT.CREATE_VIOLATION, body)
+            await axiosInstance.post(ENDPOINT.CREATE_VIOLATION, body, {
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = ((Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 0)) / 100) * 50) + 50;
+                    setProgress(percentCompleted);
+                }
+            })
             toaster.toast({ description: 'Berhasil Menambahkan Data', title: 'Sukses' })
             setStudentIds([])
             setViolationIds([])
             setNote('')
             setSearch({ ...search, student: '', violation: '' })
             setDialogVisibility(false)
+            setProgress(0)
+            setFiles([])
         } catch (e) {
+            setProgress(0)
             console.log(e);
             toaster.toast({ description: 'Data Gagal Di Input', title: 'Gagal', variant: 'destructive' })
             setDialogVisibility(false)
@@ -213,6 +249,8 @@ export default function StudentAndViolationInput() {
                 </div>
                 <Summary students={studentIds} violations={violationIds} setStudentIds={setStd} setViolationIds={setVlt} />
             </div>
+            <UploadViolationImages files={files} setFiles={setFiles} />
+
             <div className="flex w-full">
                 <Button onClick={() => {
                     const stdIds = studentIds.map((s) => s.id)
@@ -282,6 +320,9 @@ export default function StudentAndViolationInput() {
                                         <Textarea value={note} onChange={(e) => setNote(e.target.value)} />
                                     </div>
                                     <div className="flex gap-3 justify-center">
+                                        {progress !== 0 &&
+                                            <Progress value={progress} />
+                                        }
                                         <Button onClick={() => handleSubmit()}>Tambahkan</Button>
                                         <Button variant={'outline'} onClick={() => setDialogVisibility(false)}>Batal</Button>
                                     </div>

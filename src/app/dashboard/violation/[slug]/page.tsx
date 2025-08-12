@@ -12,11 +12,18 @@ export default function Page() {
     const param = useParams()
     const violationId = useMemo(() => { return String(param.slug) }, [param])
     const [violation, setViolation] = useState<Violation | undefined>(undefined)
+    const [images,setImages] = useState<number[]>([]);
     const fetchData = useCallback(async () => {
         await axiosInstance.get(`${ENDPOINT.DETAIL_VIOLATION}/${violationId}`).then((res) => {
             setViolation(res.data.data)
+            fetchImage(res.data.data)
         })
     }, [violation])
+    const fetchImage = useCallback(async (violation: Violation) => {
+        await axiosInstance.get(`${ENDPOINT.LIST_IMAGE}/${violation.imageGroupId}`).then((res) => {
+            setImages(res.data.data)
+        })
+    },[violation])
     useEffect(() => {
         fetchData();
     }, [])
@@ -45,12 +52,12 @@ export default function Page() {
                 </div>
             </div>
             <div>
-                <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
+                <h1 className="scroll-m-20 text-xl mb-4 font-extrabold tracking-tight lg:text-2xl">
                     Catatan
                 </h1>
                 <Textarea disabled className="disabled:text-black" value={violation?.note ? violation?.note : '-'}></Textarea>
             </div>
-            <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
+            <h1 className="scroll-m-20 text-xl mb-4 font-extrabold tracking-tight lg:text-2xl">
                 Siswa
             </h1>
             <div>
@@ -61,7 +68,7 @@ export default function Page() {
                     </Link>
                 ))}
             </div>
-            <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
+            <h1 className="scroll-m-20 text-xl mb-4 font-extrabold tracking-tight lg:text-2xl">
                 Pelanggaran
             </h1>
             <div>
@@ -71,6 +78,18 @@ export default function Page() {
                         <p> {vt.point} Poin</p>
                     </div>
                 ))}
+            </div>
+            <h1 className="scroll-m-20 text-xl mb-4 font-extrabold tracking-tight lg:text-2xl">
+                Gambar
+            </h1>
+            <div className="flex gap-2 flex-wrap">
+                {images.map((img) => {
+                    return (
+                        <div key={img}>
+                            <img src={`${ENDPOINT.DETAIL_IMAGE}/${img}`} width={200} height={200} alt="image" />
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )
