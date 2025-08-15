@@ -142,7 +142,7 @@ export default function ExportViolation() {
                 `${violation.date ? formatDateToExactStringAndTime(new Date(violation.date)) : ''}`,
                 `${violation.violation_types ? violation.violation_types.reduce((acc, curr) => acc + curr.point, 0) : 0} Poin`,
                 `${violation.students ? violation.students.length : 0} Siswa`,
-                `${violation.violation_types ? violation.violation_types.length  : 0} Pelanggaran`,
+                `${violation.violation_types ? violation.violation_types.length : 0} Pelanggaran`,
                 `${violation.violation_types ? violation.violation_types[0].name : ''}`,
                 `${violation.violation_types ? violation.violation_types[0].point : 0} Poin`,
                 `${violation.students ? violation.students[0].name : ''}`,
@@ -152,16 +152,16 @@ export default function ExportViolation() {
             });
             exampleRow.commit();
             const length = violation.violation_types.length > violation.students.length ? violation.violation_types.length : violation.students.length;
-            for (let index = 0; index < length; index++) {                
+            for (let index = 0; index < length; index++) {
                 const exampleRow = worksheet.addRow([
                     '',
                     '',
                     '',
                     '',
                     '',
-                    `${violation.violation_types[index+1] ? violation.violation_types[index+1].name : ''}`,
-                    `${violation.violation_types[index+1] ? `${violation.violation_types[index+1].point} Poin` : ''}`,
-                    `${violation.students[index+1] ? violation.students[index+1].name : ''}`,
+                    `${violation.violation_types[index + 1] ? violation.violation_types[index + 1].name : ''}`,
+                    `${violation.violation_types[index + 1] ? `${violation.violation_types[index + 1].point} Poin` : ''}`,
+                    `${violation.students[index + 1] ? violation.students[index + 1].name : ''}`,
                 ]);
                 exampleRow.eachCell((cell) => {
                     cell.protection = { locked: true }; // Lock the example row
@@ -187,11 +187,11 @@ export default function ExportViolation() {
         headerRow2.eachCell((cell) => {
             cell.font = { bold: true };
             cell.border = {
-                top:    { style: 'thick' },
-                left:   { style: 'thick' },
+                top: { style: 'thick' },
+                left: { style: 'thick' },
                 bottom: { style: 'thick' },
-                right:  { style: 'thick' },
-              };
+                right: { style: 'thick' },
+            };
             cell.protection = { locked: true }; // Lock the header cells
         });
 
@@ -217,13 +217,13 @@ export default function ExportViolation() {
             ]);
             row3.eachCell((cell) => {
                 if (cell.value !== '') {
-                cell.border = {
-                    top:    { style: 'thick' },
-                    left:   { style: 'thick' },
-                    bottom: { style: 'thick' },
-                    right:  { style: 'thick' },
-                  }
-                  }
+                    cell.border = {
+                        top: { style: 'thick' },
+                        left: { style: 'thick' },
+                        bottom: { style: 'thick' },
+                        right: { style: 'thick' },
+                    }
+                }
                 if (cell.value === 'No.') {
                     cell.alignment = { horizontal: 'right' };
                 }
@@ -233,21 +233,23 @@ export default function ExportViolation() {
             row3.commit();
             let num = 1;
             // @typescript-eslint/no-unused-expressions
-            student.violations && student.violations.map((violation) => {
-                violation.violation_types.map((violationType) => {
-                    const exampleRow = worksheet2.addRow([
-                        ``,
-                        num++,
-                        `${violationType ? violationType.name : ''}`,
-                        `${violation.date ? formatDateToExactStringAndTime(new Date(violation.date)) : ''}`,
-                        `${violationType ? violationType.point : 0} Poin`,
-                    ]);
-                    exampleRow.eachCell((cell) => {
-                        cell.protection = { locked: true }; // Lock the example row
-                    });
-                    exampleRow.commit();
+            if (student.violations) {
+                student.violations.map((violation) => {
+                    violation.violation_types.map((violationType) => {
+                        const exampleRow = worksheet2.addRow([
+                            ``,
+                            num++,
+                            `${violationType ? violationType.name : ''}`,
+                            `${violation.date ? formatDateToExactStringAndTime(new Date(violation.date)) : ''}`,
+                            `${violationType ? violationType.point : 0} Poin`,
+                        ]);
+                        exampleRow.eachCell((cell) => {
+                            cell.protection = { locked: true }; // Lock the example row
+                        });
+                        exampleRow.commit();
+                    })
                 })
-            })
+            }
             const row4 = worksheet2.addRow([
                 ``,
                 '',
@@ -295,7 +297,7 @@ export default function ExportViolation() {
             const exampleRow = worksheet3.addRow([
                 i + 1,
                 `${violationType.name ? violationType.name : ''}`,
-                `${violationType.violations?.length}`, 
+                `${violationType.violations?.length}`,
                 `${violationType.violations?.reduce((total, violation) => total + violation.students?.length, 0)} Siswa`,
                 `${violationType.point} Poin`,
                 `${totalPoint} Poin`,
