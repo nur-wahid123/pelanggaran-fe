@@ -15,7 +15,6 @@ import axios from "axios"
 import ENDPOINT from "@/config/url"
 import { Eye, EyeOff } from "lucide-react"
 import { useRouter } from "next/navigation"
-import Cookies from 'js-cookie'
 
 export function LoginForm({
   className,

@@ -1,4 +1,4 @@
-import { Edit, Eye, EyeClosed, LucideEdit3 } from "lucide-react";
+import { Edit, LucideEdit3 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { axiosInstance } from "@/util/request.util";
 import ENDPOINT from "@/config/url";

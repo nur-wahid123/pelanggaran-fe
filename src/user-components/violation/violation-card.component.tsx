@@ -1,5 +1,5 @@
 import { Violation } from "@/objects/violation.object";
-import { DateRange, formatDateToExactString, formatDateToExactTime } from "@/util/date.util";
+import { formatDateToExactString, formatDateToExactTime } from "@/util/date.util";
 import useInfiniteScroll from "../hook/useInfiniteScroll.hook";
 import ENDPOINT from "@/config/url";
 import { ViolationTypeEnum } from "@/enums/violation-type.enum";

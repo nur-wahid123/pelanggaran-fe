@@ -5,8 +5,6 @@ import ENDPOINT from "@/config/url";
 import { RoleEnum } from "@/enums/role.enum";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@/objects/user.object";
-import AddClass from "@/user-components/class-object/add-class.component";
-import EditClass from "@/user-components/class-object/update-class.component";
 import useInfiniteScroll from "@/user-components/hook/useInfiniteScroll.hook";
 import SearchBar from "@/user-components/ui/search-bar";
 import AddUser from "@/user-components/user/add-user.component";

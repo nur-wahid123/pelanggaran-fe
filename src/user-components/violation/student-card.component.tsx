@@ -1,5 +1,4 @@
 import { Student } from "@/objects/student.object";
-import { DateRange } from "@/util/date.util";
 import useInfiniteScroll from "../hook/useInfiniteScroll.hook";
 import ENDPOINT from "@/config/url";
 import { ViolationTypeEnum } from "@/enums/violation-type.enum";

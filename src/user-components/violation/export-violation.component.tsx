@@ -232,7 +232,8 @@ export default function ExportViolation() {
             });
             row3.commit();
             let num = 1;
-            student.violations && student.violations.map((violation, j) => {
+            // @typescript-eslint/no-unused-expressions
+            student.violations && student.violations.map((violation) => {
                 violation.violation_types.map((violationType) => {
                     const exampleRow = worksheet2.addRow([
                         ``,

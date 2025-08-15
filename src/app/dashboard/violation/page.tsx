@@ -1,23 +1,16 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import ENDPOINT from "@/config/url";
 import { ViolationTypeEnum } from "@/enums/violation-type.enum";
-import { Student } from "@/objects/student.object";
-import { ViolationType } from "@/objects/violation-type.object";
-import { Violation } from "@/objects/violation.object";
 import { DatePickerWithRange } from "@/user-components/dashboard/date-picker";
-import { PaginateContentProps } from "@/user-components/ui/pagination";
 import SearchBar from "@/user-components/ui/search-bar";
 import ExportViolation from "@/user-components/violation/export-violation.component";
 import StudentCard from "@/user-components/violation/student-card.component";
 import ViolationCard from "@/user-components/violation/violation-card.component";
 import ViolationTypeCard from "@/user-components/violation/violation-type-card.component";
 import { DateRange, formatDate, thisMonth } from "@/util/date.util";
-import { axiosInstance } from "@/util/request.util";
 import { AlertTriangle, PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 export default function Page() {
     const [search, setSearch] = useState("");

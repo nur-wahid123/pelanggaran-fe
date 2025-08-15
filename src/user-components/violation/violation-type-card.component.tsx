@@ -1,9 +1,7 @@
 import { ViolationType } from "@/objects/violation-type.object";
-import { DateRange, formatDateToExactString } from "@/util/date.util";
 import useInfiniteScroll from "../hook/useInfiniteScroll.hook";
 import { ViolationTypeEnum } from "@/enums/violation-type.enum";
 import ENDPOINT from "@/config/url";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function ViolationTypeCard({ filter }: { filter: { search: string, start_date: string, finish_date: string, type: ViolationTypeEnum } }) {
