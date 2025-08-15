@@ -14,6 +14,10 @@ export interface Violation {
     creator: User;
   
     students: Student[];
+
+    created_at?: Date;
+  
+    updated_at?: Date;
   
     violation_types: ViolationType[];
 }

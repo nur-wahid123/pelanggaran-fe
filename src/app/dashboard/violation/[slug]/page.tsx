@@ -12,18 +12,22 @@ export default function Page() {
     const param = useParams()
     const violationId = useMemo(() => { return String(param.slug) }, [param])
     const [violation, setViolation] = useState<Violation | undefined>(undefined)
-    const [images,setImages] = useState<number[]>([]);
+    const [images, setImages] = useState<number[]>([]);
     const fetchData = useCallback(async () => {
         await axiosInstance.get(`${ENDPOINT.DETAIL_VIOLATION}/${violationId}`).then((res) => {
             setViolation(res.data.data)
+            if (!res.data.data.imageGroupId) {
+                return
+            }
             fetchImage(res.data.data)
         })
     }, [violation])
+
     const fetchImage = useCallback(async (violation: Violation) => {
         await axiosInstance.get(`${ENDPOINT.LIST_IMAGE}/${violation.imageGroupId}`).then((res) => {
             setImages(res.data.data)
         })
-    },[violation])
+    }, [violation])
     useEffect(() => {
         fetchData();
     }, [])
@@ -62,7 +66,7 @@ export default function Page() {
             </h1>
             <div>
                 {violation?.students.map((st) => (
-                    <Link href={`/dashboard/student/${st.national_student_id}`} className="grid grid-cols-2" key={st.id}>
+                    <Link href={`/dashboard/student/${st.national_student_id}`} className="grid cursor-pointer hover:font-bold grid-cols-2" key={st.id}>
                         <p>{st.name}</p>
                         <p>{st.national_student_id}</p>
                     </Link>
@@ -73,24 +77,28 @@ export default function Page() {
             </h1>
             <div>
                 {violation?.violation_types.map((vt) => (
-                    <div className="flex gap-2" key={vt.id}>
+                    <Link href={`/dashboard/violation-type/${vt.id}`} className="flex hover:font-bold cursor-pointer gap-2" key={vt.id}>
                         <p>{vt.name} -</p>
                         <p> {vt.point} Poin</p>
-                    </div>
+                    </Link>
                 ))}
             </div>
-            <h1 className="scroll-m-20 text-xl mb-4 font-extrabold tracking-tight lg:text-2xl">
-                Gambar
-            </h1>
-            <div className="flex gap-2 flex-wrap">
-                {images.map((img) => {
-                    return (
-                        <div key={img}>
-                            <img src={`${ENDPOINT.DETAIL_IMAGE}/${img}`} width={200} height={200} alt="image" />
-                        </div>
-                    )
-                })}
-            </div>
+            {violation?.imageGroupId &&
+                <div>
+                    <h1 className="scroll-m-20 text-xl mb-4 font-extrabold tracking-tight lg:text-2xl">
+                        Gambar
+                    </h1>
+                    <div className="flex gap-2 flex-wrap">
+                        {images.map((img) => {
+                            return (
+                                <div key={img}>
+                                    <img src={`${ENDPOINT.DETAIL_IMAGE}/${img}`} width={200} height={200} alt="image" />
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+            }
         </div>
     )
 }

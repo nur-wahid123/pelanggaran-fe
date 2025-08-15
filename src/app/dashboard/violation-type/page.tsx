@@ -11,6 +11,7 @@ import EditViolationType from "@/user-components/violation-type/update-violation
 import ImportViolationType from "@/user-components/violation-type/violation-type-import.component";
 import { axiosInstance } from "@/util/request.util";
 import { Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Page() {
@@ -58,7 +59,7 @@ export default function Page() {
                 })
             });
     }
-
+    const route = useRouter();
     return (
         <div className="p-4">
             <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
@@ -86,7 +87,7 @@ export default function Page() {
                             {violationTypes.map((violationType, index) => {
                                 if (violationTypes.length === index + 1) {
                                     return (
-                                        <TableRow ref={ref} key={index}>
+                                        <TableRow onClick={() => { route.push(`/dashboard/violation-type/${violationType.id}`) }} className="cursor-pointer" ref={ref} key={index}>
                                             <TableCell>{index + 1}</TableCell>
                                             <TableCell>{violationType.name}</TableCell>
                                             <TableCell>{violationType.point}</TableCell>
@@ -99,7 +100,7 @@ export default function Page() {
                                     )
                                 } else {
                                     return (
-                                        <TableRow key={index}>
+                                        <TableRow onClick={() => { route.push(`/dashboard/violation-type/${violationType.id}`) }} className="cursor-pointer" key={index}>
                                             <TableCell>{index + 1}</TableCell>
                                             <TableCell>{violationType.name}</TableCell>
                                             <TableCell>{violationType.point}</TableCell>

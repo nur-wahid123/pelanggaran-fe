@@ -3,15 +3,18 @@ import { DateRange, formatDateToExactString } from "@/util/date.util";
 import useInfiniteScroll from "../hook/useInfiniteScroll.hook";
 import { ViolationTypeEnum } from "@/enums/violation-type.enum";
 import ENDPOINT from "@/config/url";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ViolationTypeCard({ filter }: { filter: { search: string, start_date: string, finish_date: string, type: ViolationTypeEnum } }) {
     const { data, loading, ref } = useInfiniteScroll<ViolationType, HTMLDivElement>({ filter, take: 20, url: ENDPOINT.MASTER_VIOLATION })
+    const router = useRouter();
     return (
         <div className="flex flex-col gap-2 max-h-[27rem] overflow-y-auto">
             {data.map((violation_type, i) => {
                 if (data.length === i + 1) {
                     return (
-                        <div key={i} ref={ref} className={"h-36 w-full gap-2 grid grid-cols-2 hover:border-slate-900 hover:scale-[99%] transition rounded-xl bg-white border border-slate-300 p-4 shadow-xl"}>
+                        <div onClick={() => router.push(`/dashboard/violation-type/${violation_type.id}`)} key={i} ref={ref} className={"h-36 w-full gap-2 grid cursor-pointergrid-cols-2 hover:border-slate-900 hover:scale-[99%] transition rounded-xl bg-white border border-slate-300 p-4 shadow-xl"}>
                             <p className="text-md flex items-center font-semibold">
                                 {violation_type.name ? violation_type.name : ''}
                             </p>
@@ -31,7 +34,7 @@ export default function ViolationTypeCard({ filter }: { filter: { search: string
                     )
                 } else {
                     return (
-                        <div key={i} className={"h-36 w-full gap-2 grid grid-cols-2 hover:border-slate-900 hover:scale-[99%] transition rounded-xl bg-white border border-slate-300 p-4 shadow-xl"}>
+                        <div onClick={() => router.push(`/dashboard/violation-type/${violation_type.id}`)} key={i} className={"h-36 w-full gap-2 cursor-pointer grid grid-cols-2 hover:border-slate-900 hover:scale-[99%] transition rounded-xl bg-white border border-slate-300 p-4 shadow-xl"}>
                             <p className="text-md flex items-center font-semibold">
                                 {violation_type.name ? violation_type.name : ''}
                             </p>
