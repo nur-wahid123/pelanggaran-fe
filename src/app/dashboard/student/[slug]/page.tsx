@@ -30,24 +30,34 @@ export default function Page() {
             <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
                 Detail Siswa
             </h1>
-            <div className="grid grid-cols-4">
-                <div className="">
-                    <p className="p-1 border rounded-tl-xl">Nama</p>
-                    <p className="p-1 border">Kelas</p>
-                    <p className="p-1 border">NISN</p>
-                    <p className="p-1 border">NIS</p>
-                    <p className="p-1 border">Total Poin</p>
-                    <p className="p-1 border">Total Melanggar</p>
-                </div>
-                <div className="font-semibold col-span-3">
-                    <p className="p-1 border rounded-tr-xl">: {student?.name}</p>
-                    <p className="p-1 border">: {student?.student_class?.name}</p>
-                    <p className="p-1 border">: {student?.national_student_id}</p>
-                    <p className="p-1 border">: {student?.school_student_id}</p>
-                    <p className="p-1 border">: {dataV.length === 0 ? 0 : dataV?.reduce((acc, curr) => acc + curr.violation_types?.reduce((acc, curr) => acc + curr.point, 0), 0)} Poin</p>
-                    <p className="p-1 border">: {dataV.length} Kali</p>
-                </div>
-            </div>
+            <table className="table-auto w-full">
+                <tbody>
+                    <tr>
+                        <td className="p-1 border">Nama</td>
+                        <td className="p-1 border font-semibold">: {student?.name}</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">Kelas</td>
+                        <td className="p-1 border font-semibold">: {student?.student_class?.name}</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">NISN</td>
+                        <td className="p-1 border font-semibold">: {student?.national_student_id}</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">NIS</td>
+                        <td className="p-1 border font-semibold">: {student?.school_student_id}</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">Total Poin</td>
+                        <td className="p-1 border font-semibold">: {dataV.length === 0 ? 0 : dataV?.reduce((acc, curr) => acc + curr.violation_types?.reduce((acc, curr) => acc + curr.point, 0), 0)} Poin</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">Total Melanggar</td>
+                        <td className="p-1 border font-semibold">: {dataV.length} Kali</td>
+                    </tr>
+                </tbody>
+            </table>
             <div className="w-full flex flex-col gap-4">
                 <div className="rounded-xl bg-white p-4">
                     <p className="font-bold text-xl">Riwayat Pelanggaran</p>

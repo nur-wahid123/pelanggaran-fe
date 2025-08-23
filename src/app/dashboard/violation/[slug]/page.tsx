@@ -37,24 +37,34 @@ export default function Page() {
             <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
                 Detail Pelanggaran
             </h1>
-            <div className="grid grid-cols-4">
-                <div className="">
-                    <p className="p-1 border rounded-tl-xl">Tanggal</p>
-                    <p className="p-1 border">Jam</p>
-                    <p className="p-1 border">Pencatat</p>
-                    <p className="p-1 border">Jumlah siswa</p>
-                    <p className="p-1 border">Pelanggaran yang dilakukan</p>
-                    <p className="p-1 border">Total Poin</p>
-                </div>
-                <div className="font-semibold col-span-3">
-                    <p className="p-1 border rounded-tr-xl">: {formatDateToExactString(violation?.date ? new Date(violation?.date) : new Date())}</p>
-                    <p className="p-1 border">: {formatDateToExactTime(violation?.date ? new Date(violation?.date) : new Date())}</p>
-                    <p className="p-1 border">: {violation?.creator ? violation?.creator?.name : "-"}</p>
-                    <p className="p-1 border">: {violation?.students.length} Siswa</p>
-                    <p className="p-1 border">: {violation?.violation_types.length} Pelanggaran</p>
-                    <p className="p-1 border">: {violation?.violation_types.reduce((acc, curr) => acc + curr.point, 0)} poin</p>
-                </div>
-            </div>
+            <table className="table-auto w-full">
+                <tbody>
+                    <tr>
+                        <td className="p-1 border">Tanggal</td>
+                        <td className="p-1 border font-semibold">: {formatDateToExactString(violation?.date ? new Date(violation?.date) : new Date())}</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">Jam</td>
+                        <td className="p-1 border font-semibold">: {formatDateToExactTime(violation?.date ? new Date(violation?.date) : new Date())}</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">Pencatat</td>
+                        <td className="p-1 border font-semibold">: {violation?.creator ? violation?.creator?.name : "-"}</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">Jumlah siswa</td>
+                        <td className="p-1 border font-semibold">: {violation?.students.length} Siswa</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">Pelanggaran yang dilakukan</td>
+                        <td className="p-1 border font-semibold">: {violation?.violation_types.length} Pelanggaran</td>
+                    </tr>
+                    <tr>
+                        <td className="p-1 border">Total Poin</td>
+                        <td className="p-1 border font-semibold">: {violation?.violation_types.reduce((acc, curr) => acc + curr.point, 0)} poin</td>
+                    </tr>
+                </tbody>
+            </table>
             <div>
                 <h1 className="scroll-m-20 text-xl mb-4 font-extrabold tracking-tight lg:text-2xl">
                     Catatan

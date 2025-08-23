@@ -34,7 +34,6 @@ export function LoginForm({
         const token = res.data.data.access_token;
 
         if (token) {
-          console.log(token);
 
           try {
             // Cookies.set('token', token);   

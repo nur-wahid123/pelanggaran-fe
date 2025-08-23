@@ -27,7 +27,7 @@ import { Violation } from "@/objects/violation.object";
 import { Student } from "@/objects/student.object";
 import { ViolationType } from "@/objects/violation-type.object";
 import { Progress } from "@/components/ui/progress";
-import ExcelJS from 'exceljs';
+import ExcelJS, { Anchor } from 'exceljs';
 
 export const makeMonthYear = (startDate: Date) => {
     const months: string[][] = [];
@@ -52,13 +52,13 @@ export default function ExportViolation() {
     const setDate = useCallback((from: Date, to: Date) => {
         setDateRange({ start_date: formatDate(from), finish_date: formatDate(to) });
     }, []);
-    const [dataCollection, setDataCollection] = useState<Violation[]>([]);
-    const [dataPerStudent, setDataPerStudent] = useState<Student[]>([]);
-    const [dataPerViolationType, setDataPerViolationType] = useState<ViolationType[]>([]);
-    const [hasMore, setHasMore] = useState(true);
+    // const [dataCollection, setDataCollection] = useState<Violation[]>([]);
+    // const [dataPerStudent, setDataPerStudent] = useState<Student[]>([]);
+    // const [dataPerViolationType, setDataPerViolationType] = useState<ViolationType[]>([]);
+    // const [hasMore, setHasMore] = useState(true);
     const [progress, setProgress] = useState(0);
 
-    const fetchData = useCallback(async (page: number, take: number, type: ViolationTypeEnum): Promise<boolean> => {
+    const fetchData = useCallback(async (page: number, take: number, type: ViolationTypeEnum, data: Violation[] | Student[] | ViolationType[]): Promise<boolean> => {
         let hasNext = true;
         await axiosInstance.get(ENDPOINT.MASTER_VIOLATION, {
             params: {
@@ -70,12 +70,22 @@ export default function ExportViolation() {
         })
             .then(res => {
                 if (Array.isArray(res.data.data)) {
-                    if (type === ViolationTypeEnum.COLLECTION) setDataCollection(prevData => [...prevData, ...res.data.data]);
-                    if (type === ViolationTypeEnum.PER_STUDENT) setDataPerStudent(prevData => [...prevData, ...res.data.data]);
-                    if (type === ViolationTypeEnum.PER_VIOLATION_TYPE) setDataPerViolationType(prevData => [...prevData, ...res.data.data]);
-                    console.log(res.data.pagination.has_next_page);
+                    if (type === ViolationTypeEnum.COLLECTION) {
+                        // setDataCollection(prevData => [...prevData, ...res.data.data]);
+                        // data = [...data, ...res.data.data];
+                        data.push(...res.data.data);
+                    }
+                    if (type === ViolationTypeEnum.PER_STUDENT) {
+                        // setDataPerStudent(prevData => [...prevData, ...res.data.data]);
+                        data.push(...res.data.data);
+                        // data = [...data, ...res.data.data];
+                    }
+                    if (type === ViolationTypeEnum.PER_VIOLATION_TYPE) {
+                        // setDataPerViolationType(prevData => [...prevData, ...res.data.data]);
+                        data.push(...res.data.data);
+                        // data = [...data, ...res.data.data];
+                    }
                     hasNext = res.data.pagination.has_next_page;
-                    setHasMore(res.data.pagination.has_next_page)
                 }
             })
             .catch(err => {
@@ -83,32 +93,40 @@ export default function ExportViolation() {
                 setLoading(false);
             });
         return hasNext;
-    }, [setHasMore, dateRange, setDataCollection, setDataPerStudent, setDataPerViolationType]);
+    }, [dateRange]);
 
-    const exportData = useCallback(async () => {
-        console.log(dateRange);
-        setLoading(true);
-        setDataCollection([]);
-        setDataPerStudent([]);
-        setDataPerViolationType([]);
-        setProgress(0);
-        setHasMore(true);
+    const fetchDatas = useCallback(async () => {
         let hasNext = true
+        let page = 1
+        const dataCollection: Violation[] = [];
+        const dataPerStudent: Student[] = [];
+        const dataPerViolationType: ViolationType[] = [];
         while (hasNext) {
-            hasNext = await fetchData(1, 100, ViolationTypeEnum.COLLECTION);
+            const res = await fetchData(page, 100, ViolationTypeEnum.COLLECTION, dataCollection);
+            hasNext = res;
+            page++
         }
         setProgress(20);
-        setHasMore(true);
         hasNext = true;
+        page = 1
         while (hasNext) {
-            hasNext = await fetchData(1, 100, ViolationTypeEnum.PER_STUDENT);
+            hasNext = await fetchData(page, 100, ViolationTypeEnum.PER_STUDENT, dataPerStudent);
+            page++
         }
         setProgress(30);
         hasNext = true;
+        page = 1
         while (hasNext) {
-            hasNext = await fetchData(1, 100, ViolationTypeEnum.PER_VIOLATION_TYPE);
+            hasNext = await fetchData(page, 100, ViolationTypeEnum.PER_VIOLATION_TYPE, dataPerViolationType);
+            page++
         }
         setProgress(40);
+        exportData(dataCollection, dataPerStudent, dataPerViolationType);
+    }, [fetchData]);
+
+    const exportData = useCallback(async (dataCollection: Violation[], dataPerStudent: Student[], dataPerViolationType: ViolationType[]) => {
+        setLoading(true);
+        setProgress(0);
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Per Pelanggaran');
         const columns = [
@@ -136,39 +154,109 @@ export default function ExportViolation() {
             cell.protection = { locked: true }; // Lock the header cells
         });
 
-        dataCollection.map((violation, i) => {
-            const exampleRow = worksheet.addRow([
-                i + 1,
-                `${violation.date ? formatDateToExactStringAndTime(new Date(violation.date)) : ''}`,
-                `${violation.violation_types ? violation.violation_types.reduce((acc, curr) => acc + curr.point, 0) : 0} Poin`,
-                `${violation.students ? violation.students.length : 0} Siswa`,
-                `${violation.violation_types ? violation.violation_types.length : 0} Pelanggaran`,
-                `${violation.violation_types ? violation.violation_types[0].name : ''}`,
-                `${violation.violation_types ? violation.violation_types[0].point : 0} Poin`,
-                `${violation.students ? violation.students[0].name : ''}`,
-            ]);
-            exampleRow.eachCell((cell) => {
-                cell.protection = { locked: true }; // Lock the example row
-            });
-            exampleRow.commit();
-            const length = violation.violation_types.length > violation.students.length ? violation.violation_types.length : violation.students.length;
-            for (let index = 0; index < length; index++) {
+        try {
+
+            for (let i = 0; i < dataCollection.length; i++) {
+                const violation = dataCollection[i];
+
+                // }
+                // dataCollection.map(async (violation, i) => {
+                const imageIds = []
+                for (let index = 0; index < (violation.images?.length ?? 0); index++) {
+                    const element = violation.images[index] ?? [];
+
+                    const response = await fetch(`${ENDPOINT.DETAIL_IMAGE}/${element}`);
+                    const contentType = response.headers.get("content-type");
+
+                    if (!contentType) {
+                        throw new Error("No content-type returned from server");
+                    }
+                    let extension: "png" | "jpeg" | "gif" = contentType.split("/")[1] as "png" | "jpeg" | "gif";
+                    if (extension !== "png" && extension !== "jpeg" && extension !== "gif") {
+                        extension = "png";
+                    }
+                    const blob = await response.blob();
+                    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+                        const objectUrl = URL.createObjectURL(blob);
+                        const image = new Image();
+                        image.onload = () => {
+                            resolve(image);
+                            URL.revokeObjectURL(objectUrl);
+                        };
+                        image.onerror = reject;
+                        image.src = objectUrl;
+                    });
+                    const reader = new FileReader();
+
+                    const base64: string = await new Promise((resolve, reject) => {
+                        reader.onloadend = () => resolve(reader.result as string);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+
+                    const imageId = workbook.addImage({
+                        base64: base64,
+                        extension
+                    });
+                    imageIds.push({ imageId, width: img.width, height: img.height });
+                }
+
+                // console.log(imageIds);
+
+
                 const exampleRow = worksheet.addRow([
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    `${violation.violation_types[index + 1] ? violation.violation_types[index + 1].name : ''}`,
-                    `${violation.violation_types[index + 1] ? `${violation.violation_types[index + 1].point} Poin` : ''}`,
-                    `${violation.students[index + 1] ? violation.students[index + 1].name : ''}`,
+                    i + 1,
+                    `${violation.date ? formatDateToExactStringAndTime(new Date(violation.date)) : ''}`,
+                    `${violation.violation_types ? violation.violation_types.reduce((acc, curr) => acc + curr.point, 0) : 0} Poin`,
+                    `${violation.students ? violation.students.length : 0} Siswa`,
+                    `${violation.violation_types ? violation.violation_types.length : 0} Pelanggaran`,
+                    `${violation.violation_types ? violation.violation_types[0].name : ''}`,
+                    `${violation.violation_types ? violation.violation_types[0].point : 0} Poin`,
+                    `${violation.students ? violation.students[0].name : ''}`,
                 ]);
+                for (let index = 0; index < imageIds.length; index++) {
+                    const element = imageIds[index];
+
+                    const col = index + 8;               // your starting column
+                    const row = exampleRow.number - 1;       // the row you want
+                    const imageHeight =200
+                    const imageWidth = (element.width * (imageHeight / element.height));
+                    worksheet.addImage(element.imageId, {
+                        tl: { col, row },
+                        ext: { width: imageWidth, height: imageHeight },
+                        editAs: 'twoCellAnchor',
+                    });
+
+                    //edit cell size to fit the image
+                    worksheet.getColumn(col+1).width = imageWidth/2; // experiment with this
+                    worksheet.getRow(row+1).height = imageHeight;       // experiment with this
+                }
+
                 exampleRow.eachCell((cell) => {
-                    cell.protection = { locked: true }; // Lock the example row
+                    cell.protection = { locked: true };
                 });
                 exampleRow.commit();
+                const length = violation.violation_types.length > violation.students.length ? violation.violation_types.length : violation.students.length;
+                for (let index = 0; index < length; index++) {
+                    const exampleRow = worksheet.addRow([
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        `${violation.violation_types[index + 1] ? violation.violation_types[index + 1].name : ''}`,
+                        `${violation.violation_types[index + 1] ? `${violation.violation_types[index + 1].point} Poin` : ''}`,
+                        `${violation.students[index + 1] ? violation.students[index + 1].name : ''}`,
+                    ]);
+                    exampleRow.eachCell((cell) => {
+                        cell.protection = { locked: true }; // Lock the example row
+                    });
+                    exampleRow.commit();
+                }
             }
-        })
+        } catch (e) {
+            console.log(e);
+        }
         setProgress(50);
 
         const worksheet2 = workbook.addWorksheet('Per Siswa');
@@ -322,12 +410,9 @@ export default function ExportViolation() {
         setLoading(false)
         setProgress(0);
 
-    }, [hasMore, setProgress, progress, dataCollection, dataPerStudent, dataPerViolationType, fetchData]);
+    }, [setProgress, progress, fetchData]);
 
     useEffect(() => {
-        // console.log(months);
-
-        // setMonthYears(months);
     }, [])
 
     useEffect(() => {
@@ -375,7 +460,7 @@ export default function ExportViolation() {
                                 </div>
                             }
                             {loading && <Progress value={progress} max={100} />}
-                            <Button onClick={() => exportData()}>Export</Button>
+                            <Button onClick={() => fetchDatas()}>Export</Button>
                         </div>
 
                     </DialogDescription>

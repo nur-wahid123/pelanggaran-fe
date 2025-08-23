@@ -13,6 +13,8 @@ export interface Violation {
 
   creator: User;
 
+  images: number[];
+
   students: Student[];
 
   created_at?: Date;

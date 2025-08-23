@@ -47,7 +47,6 @@ export default function StudentAndViolationInput() {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            console.log(res);
 
             imageId = res.data.data
         } catch (error) {
