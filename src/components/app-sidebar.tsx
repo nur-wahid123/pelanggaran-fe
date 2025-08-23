@@ -123,6 +123,9 @@ const data = {
       url: "/dashboard/violation",
       icon: List,
     },
+
+  ],
+  adminPage: [
     {
       name: "Jenis Pelanggaran",
       url: "/dashboard/violation-type",
@@ -138,8 +141,6 @@ const data = {
       url: "/dashboard/student",
       icon: User,
     },
-  ],
-  adminPage: [
     {
       name: "User",
       url: "/dashboard/user",
@@ -175,7 +176,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* <NavMain items={data.navMain} /> */}
-        <NavProjects title="Projects" projects={data.projects} />
+        <NavProjects title="User" projects={data.projects} />
         {user.role === RoleEnum.ADMIN && <NavProjects title="Halaman Admin" projects={data.adminPage} />}
 
       </SidebarContent>

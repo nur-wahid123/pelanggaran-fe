@@ -105,10 +105,10 @@ export default function StudentAndViolationInput() {
     }, [search]);
     return (
         <div className="flex flex-col gap-4">
-            <div className="w-full grid grid-cols-2 gap-3 ">
+            <div className="w-full grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 gap-3 ">
                 <div className="w-full flex flex-col gap-2">
                     <div className="flex gap-3">
-                        <SearchBar onSearch={handleSearch} />
+                        <SearchBar text="Cari Siswa....." onSearch={handleSearch} />
                     </div>
                     <div className="w-full h-full max-h-96 overflow-auto">
                         <Table>
@@ -175,7 +175,7 @@ export default function StudentAndViolationInput() {
                 </div>
                 <div className="w-full flex flex-col gap-2">
                     <div className="flex gap-3">
-                        <SearchBar onSearch={handleSearchVi} />
+                        <SearchBar text={"Cari Pelanggaran....."} onSearch={handleSearchVi} />
                     </div>
                     <div className="w-full h-full max-h-96 overflow-auto">
                         <Table>

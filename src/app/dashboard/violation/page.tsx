@@ -35,12 +35,12 @@ export default function Page() {
             </h1>
             <div className="w-full flex flex-col gap-4">
                 {/* ({flatData.length} of {totalDBRowCount} rows fetched) */}
-                <div className="flex gap-6 items-center justify-between">
+                <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
                     <SearchBar onSearch={handleSearch} />
                     <DatePickerWithRange startDate={new Date(dateRange.start_date)} finishDate={new Date(dateRange.finish_date)} setOutDate={setDate} />
                     <ExportViolation/>
                     <Link href={'/dashboard/input-violation'}>
-                        <Button className="flex gap-3 shadow hover:shadow-md" variant="outline"><AlertTriangle className="w-4" />Input Pelanggaran <PlusIcon className="w-4" /></Button>
+                        <Button className="flex w-full gap-3 shadow hover:shadow-md" variant="outline"><AlertTriangle className="w-4" />Input Pelanggaran <PlusIcon className="w-4" /></Button>
                     </Link>
                 </div>
                 <div className="flex flex-wrap gap-2">

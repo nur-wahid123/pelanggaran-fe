@@ -44,8 +44,8 @@ export default function Statistics() {
 
   return (
     <div className="flex flex-col gap-5 max-h-screen">
-      <div className=" flex justify-between items-center">
-        <Tabs defaultValue='this_month' className="w-full items-center flex gap-6">
+      <div className=" flex flex-col gap-4 md:flex-row justify-between items-start md:items-center">
+        <Tabs defaultValue='this_month' className="w-full items-center flex  gap-6">
           <TabsList>
             <TabsTrigger onClick={() => setDate(qry.startOfMonth, qry.endOfMonth)} value="this_month">Bulan Ini</TabsTrigger>
             <TabsTrigger value="custom">Custom</TabsTrigger>
@@ -60,7 +60,7 @@ export default function Statistics() {
           {formatDateToExactString(new Date(dateRange.start_date))} - {formatDateToExactString(new Date(dateRange.finish_date))}
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-4">
 
         <div className="max-w-1/4 flex flex-col gap-5 w-full p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <div>Total Pelanggaran</div>
@@ -98,11 +98,11 @@ export default function Statistics() {
         </div>
 
       </div>
-      <div className="grid gap-4 grid-cols-4">
-        <div className="col-span-2">
+      <div className="grid gap-4 grid-cols-1 grid-rows-2 md:grid-rows-1 md:grid-cols-2">
+        <div className="">
           <ChartData from={new Date(dateRange.start_date)} to={new Date(dateRange.finish_date)} />
         </div>
-        <div className="col-span-2">
+        <div className="">
           <DonutData />
         </div>
       </div>

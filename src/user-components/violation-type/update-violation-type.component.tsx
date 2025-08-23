@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-export default function EditViolationType({ violationTypeId, reFetch }: { violationTypeId: number | undefined, reFetch: () => void }) {
+export default function EditViolationType({ violationTypeId, reFetch,text }: { text?:string,violationTypeId: number | undefined, reFetch: () => void }) {
     const [openEditViolationType, setOpenEditViolationType] = React.useState(false);
     const [violationType, setViolationType] = React.useState({} as ViolationType);
     const toast = useToast()
@@ -66,7 +66,7 @@ export default function EditViolationType({ violationTypeId, reFetch }: { violat
                 <div>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button>Edit <Edit className="w-4"></Edit></Button>
+                            <Button>{text ?? "Edit" }<Edit className="w-4"></Edit></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Edit {value?.name ?? "Extra"}</p>

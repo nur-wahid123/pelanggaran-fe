@@ -27,7 +27,7 @@ import { Violation } from "@/objects/violation.object";
 import { Student } from "@/objects/student.object";
 import { ViolationType } from "@/objects/violation-type.object";
 import { Progress } from "@/components/ui/progress";
-import ExcelJS, { Anchor } from 'exceljs';
+import ExcelJS from 'exceljs';
 
 export const makeMonthYear = (startDate: Date) => {
     const months: string[][] = [];
@@ -422,7 +422,7 @@ export default function ExportViolation() {
     return (
         <Dialog modal={false}>
             <DialogTrigger asChild>
-                <Button>
+                <Button className="w-full">
                     Export <Download />
                 </Button>
             </DialogTrigger>

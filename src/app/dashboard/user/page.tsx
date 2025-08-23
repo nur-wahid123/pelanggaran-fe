@@ -66,7 +66,7 @@ export default function Page() {
                 {config.title}
             </h1>
             <div className="w-full flex flex-col gap-4">
-                <div className="flex gap-6 items-center justify-between">
+                <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
                     <SearchBar onSearch={handleSearch} />
                     <AddUser reFetch={reFetch} />
                 </div>

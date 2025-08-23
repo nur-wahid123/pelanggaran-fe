@@ -15,7 +15,7 @@ import { useCallback, useState } from "react";
 export default function Page() {
     const [search, setSearch] = useState("");
     const toaster = useToast();
-    const { data: classes, loading, ref } = useInfiniteScroll<ClassObject,HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_CLASS });
+    const { data: classes, loading, ref } = useInfiniteScroll<ClassObject, HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_CLASS });
 
     const handleSearch = useCallback(function (query: string) {
         if (query !== search) {
@@ -65,7 +65,7 @@ export default function Page() {
                 Kelas
             </h1>
             <div className="w-full flex flex-col gap-4">
-                <div className="flex gap-6 items-center justify-between">
+                <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
                     <SearchBar onSearch={handleSearch} />
                     <AddClass reFetch={reFetch} />
                 </div>
@@ -90,7 +90,11 @@ export default function Page() {
                                                 {classObject.name}
                                             </TableCell>
                                             <TableCell>{classObject.students?.length}</TableCell>
-                                            <TableCell className="flex gap-2 items-center">
+                                            <TableCell className="flex md:hidden flex-col gap-2 items-center">
+                                                <EditClass text={''} classId={classObject.id} reFetch={reFetch} />
+                                                <Button onClick={() => { handleDelete(classObject.id ?? 0) }}><Trash className="w-4"></Trash></Button>
+                                            </TableCell>
+                                            <TableCell className="hidden md:flex gap-2 items-center">
                                                 <EditClass classId={classObject.id} reFetch={reFetch} />
                                                 <Button onClick={() => { handleDelete(classObject.id ?? 0) }}>Hapus <Trash className="w-4"></Trash></Button>
                                             </TableCell>
@@ -104,7 +108,11 @@ export default function Page() {
                                                 {classObject.name}
                                             </TableCell>
                                             <TableCell>{classObject.students?.length}</TableCell>
-                                            <TableCell className="flex gap-2 items-center">
+                                            <TableCell className="flex md:hidden flex-col gap-2 items-center">
+                                                <EditClass text={''} classId={classObject.id} reFetch={reFetch} />
+                                                <Button onClick={() => { handleDelete(classObject.id ?? 0) }}><Trash className="w-4"></Trash></Button>
+                                            </TableCell>
+                                            <TableCell className="hidden md:flex gap-2 items-center">
                                                 <EditClass classId={classObject.id} reFetch={reFetch} />
                                                 <Button onClick={() => { handleDelete(classObject.id ?? 0) }}>Hapus <Trash className="w-4"></Trash></Button>
                                             </TableCell>

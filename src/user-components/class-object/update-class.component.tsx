@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useCallback, useEffect, useState } from "react";
 import { ClassObject } from "@/objects/class.object";
 
-export default function EditClass({ classId, reFetch }: { classId: number | undefined, reFetch: () => void }) {
+export default function EditClass({ text, classId, reFetch }: { text?: string, classId: number | undefined, reFetch: () => void }) {
     const [openEditClass, setOpenEditClass] = useState(false);
     const [classObject, setClass] = useState({} as ClassObject);
     const toast = useToast()
@@ -65,7 +65,7 @@ export default function EditClass({ classId, reFetch }: { classId: number | unde
                 <div>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button>Edit <Edit className="w-4"></Edit></Button>
+                            <Button>{text ?? "Edit"} <Edit className="w-4"></Edit></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Edit {value?.name ?? "Extra"}</p>

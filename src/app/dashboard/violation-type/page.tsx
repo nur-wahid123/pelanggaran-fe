@@ -17,7 +17,7 @@ import { useState } from "react";
 export default function Page() {
     const [search, setSearch] = useState("");
     const toaster = useToast();
-    const { data: violationTypes, loading,ref } = useInfiniteScroll<ViolationType,HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
+    const { data: violationTypes, loading, ref } = useInfiniteScroll<ViolationType, HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
     function handleSearch(query: string) {
         if (query !== search) {
             setSearch(query);
@@ -61,25 +61,25 @@ export default function Page() {
     }
     const route = useRouter();
     return (
-        <div className="p-4">
+        <div className="p-4 w-full">
             <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
                 Jenis Pelanggaran
             </h1>
             <div className="w-full flex flex-col gap-4">
-                <div className="flex gap-6 items-center justify-between">
+                <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
                     <SearchBar onSearch={handleSearch} />
                     <AddViolationType reFetch={reFetch} />
                     <ImportViolationType reFetch={reFetch} />
                 </div>
-                <div className="max-h-[31rem] overflow-y-auto">
-                    <Table className="w-full table-fixed">
+                <div className="max-h-[31rem] w-full overflow-x-auto max-w-96 md:max-w-full overflow-y-auto">
+                    <Table className="table-fixed w-full">
                         <TableHeader className="bg-slate-100 text-black">
                             <TableRow>
-                                <TableHead>No</TableHead>
+                                <TableHead className="w-8">No</TableHead>
                                 <TableHead>Nama Pelanggaran</TableHead>
-                                <TableHead>Poin</TableHead>
+                                <TableHead className="w-8">Poin</TableHead>
                                 <TableHead>Jumlah Pelanggaran dilakukan</TableHead>
-                                <TableHead>Aksi</TableHead>
+                                <TableHead className="w-16 md:w-40">Aksi</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody
@@ -92,7 +92,11 @@ export default function Page() {
                                             <TableCell>{violationType.name}</TableCell>
                                             <TableCell>{violationType.point}</TableCell>
                                             <TableCell>{violationType.violations.length}</TableCell>
-                                            <TableCell className="flex gap-2 items-center">
+                                            <TableCell className="flex md:hidden gap-2 items-center flex-col md:flex-row">
+                                                <EditViolationType text={''} violationTypeId={violationType.id} reFetch={reFetch} />
+                                                <Button onClick={() => { handleDelete(violationType.id ?? 0) }}><Trash className="w-4"></Trash></Button>
+                                            </TableCell>
+                                            <TableCell className="hidden md:flex gap-2 items-center flex-col md:flex-row">
                                                 <EditViolationType violationTypeId={violationType.id} reFetch={reFetch} />
                                                 <Button onClick={() => { handleDelete(violationType.id ?? 0) }}>Hapus <Trash className="w-4"></Trash></Button>
                                             </TableCell>
@@ -105,7 +109,11 @@ export default function Page() {
                                             <TableCell>{violationType.name}</TableCell>
                                             <TableCell>{violationType.point}</TableCell>
                                             <TableCell>{violationType.violations.length}</TableCell>
-                                            <TableCell className="flex gap-2 items-center">
+                                            <TableCell className="flex md:hidden gap-2 items-center flex-col md:flex-row">
+                                                <EditViolationType text={''} violationTypeId={violationType.id} reFetch={reFetch} />
+                                                <Button onClick={() => { handleDelete(violationType.id ?? 0) }}><Trash className="w-4"></Trash></Button>
+                                            </TableCell>
+                                            <TableCell className="hidden md:flex gap-2 items-center flex-col md:flex-row">
                                                 <EditViolationType violationTypeId={violationType.id} reFetch={reFetch} />
                                                 <Button onClick={() => { handleDelete(violationType.id ?? 0) }}>Hapus <Trash className="w-4"></Trash></Button>
                                             </TableCell>
