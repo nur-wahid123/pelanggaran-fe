@@ -6,7 +6,6 @@ import ENDPOINT from "@/config/url"
 import { useToast } from "@/hooks/use-toast"
 import { axiosInstance } from "@/util/request.util"
 import { CircleX, Edit, Save } from "lucide-react"
-import Image from "next/image"
 import React from "react"
 
 export default function Page() {

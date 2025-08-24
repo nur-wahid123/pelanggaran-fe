@@ -5,7 +5,7 @@ import { ViolationTypeEnum } from "@/enums/violation-type.enum";
 import { Student } from "@/objects/student.object";
 import { Violation } from "@/objects/violation.object";
 import useInfiniteScroll from "@/user-components/hook/useInfiniteScroll.hook";
-import { formatDateToExactString, formatDateToExactStringAndTime, formatDateToExactTime } from "@/util/date.util";
+import { formatDateToExactString, formatDateToExactTime } from "@/util/date.util";
 import { axiosInstance } from "@/util/request.util";
 import Link from "next/link";
 import { useParams } from "next/navigation";

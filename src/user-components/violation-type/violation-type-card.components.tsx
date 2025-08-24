@@ -1,7 +1,6 @@
 import { ViolationType } from "@/objects/violation-type.object";
 import { toTitleCase } from "@/util/util";
 import EditViolationType from "./update-violation-type.component";
-import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/util/request.util";
 import ENDPOINT from "@/config/url";
 import { useToast } from "@/hooks/use-toast";
