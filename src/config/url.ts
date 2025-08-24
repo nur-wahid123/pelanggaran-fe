@@ -8,6 +8,14 @@ const ENDPOINT = {
   MASTER_STUDENT: `${CONFIG.BASE_URL}/student/list`,
   EXPORT_STUDENT: `${CONFIG.BASE_URL}/student/export`,
 
+  //School Profile
+  SCHOOL_LOGO: `${CONFIG.BASE_URL}/school-profile/school-logo`,
+  SCHOOL_NAME: `${CONFIG.BASE_URL}/school-profile/school-name`,
+  SCHOOL_ADDRESS: `${CONFIG.BASE_URL}/school-profile/school-address`,
+  EDIT_SCHOOL_LOGO: `${CONFIG.BASE_URL}/school-profile/school-logo/edit`,
+  EDIT_SCHOOL_ADDRESS: `${CONFIG.BASE_URL}/school-profile/school-address/edit`,
+  EDIT_SCHOOL_NAME: `${CONFIG.BASE_URL}/school-profile/school-name/edit`,
+
   //Image
   UPLOAD_IMAGE: `${CONFIG.BASE_URL}/image/upload`,
   DELETE_IMAGE: `${CONFIG.BASE_URL}/image/delete`,

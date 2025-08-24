@@ -6,6 +6,7 @@ import {
   GalleryVerticalEnd,
   LayoutDashboard,
   List,
+  Settings,
   Tag,
   User,
   Users,
@@ -146,6 +147,11 @@ const data = {
       url: "/dashboard/user",
       icon: Users,
     },
+    {
+      name: "Pengaturan",
+      url: "/dashboard/settings",
+      icon: Settings,
+    },
   ]
 }
 
@@ -172,10 +178,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        {/* <NavMain items={data.navMain} /> */}
         <NavProjects title="User" projects={data.projects} />
         {user.role === RoleEnum.ADMIN && <NavProjects title="Halaman Admin" projects={data.adminPage} />}
 
