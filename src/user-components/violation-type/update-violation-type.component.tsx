@@ -66,7 +66,7 @@ export default function EditViolationType({ violationTypeId, reFetch,text }: { t
                 <div>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button>{text ?? "Edit" }<Edit className="w-4"></Edit></Button>
+                            <Button>{text ?? "Edit" }<Edit className="w-full md:w-4"></Edit></Button>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Edit {value?.name ?? "Extra"}</p>

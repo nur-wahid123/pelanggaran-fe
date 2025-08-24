@@ -1,10 +1,11 @@
 'use client'
+import { Separator } from "@/components/ui/separator";
 import ENDPOINT from "@/config/url";
 import { ViolationTypeEnum } from "@/enums/violation-type.enum";
 import { Student } from "@/objects/student.object";
 import { Violation } from "@/objects/violation.object";
 import useInfiniteScroll from "@/user-components/hook/useInfiniteScroll.hook";
-import { formatDateToExactStringAndTime } from "@/util/date.util";
+import { formatDateToExactString, formatDateToExactStringAndTime, formatDateToExactTime } from "@/util/date.util";
 import { axiosInstance } from "@/util/request.util";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -58,16 +59,20 @@ export default function Page() {
                     </tr>
                 </tbody>
             </table>
-            <div className="w-full flex flex-col gap-4">
-                <div className="rounded-xl bg-white p-4">
-                    <p className="font-bold text-xl">Riwayat Pelanggaran</p>
-                    <div className="max-h-60 overflow-y-auto">
+            <div className="w-full flex flex-col mt-4 gap-4">
+                <div className="rounded-xl bg-white">
+                    <div className="font-bold text-xl">Riwayat Pelanggaran</div>
+                    <Separator className="my-2" />
+                    <div className="max-h-60 flex flex-col gap-3 overflow-y-auto">
                         {dataV.map((v, i) => {
                             if (dataV.length === i + 1) {
                                 return (
-                                    <Link key={i}  href={`/dashboard/violation/${v.id}`}>
-                                        <div ref={refV} className="p-2 border-b border-slate-300">
-                                            <p className="font-semibold">{formatDateToExactStringAndTime(new Date(String(v.date)) ?? new Date())}</p>
+                                    <Link key={i} href={`/dashboard/violation/${v.id}`}>
+                                        <div ref={refV} className="p-2 border rounded-md shadow-md border-slate-300">
+                                            <div className="flex gap-4">
+                                                <p className="font-semibold">{formatDateToExactString(new Date(String(v.date)) ?? new Date())}</p>
+                                                <p className="text-slate-400">{formatDateToExactTime(new Date(String(v.date)) ?? new Date())}</p>
+                                            </div>
                                             <p className="font-medium text-slate-500">{v.creator?.name}</p>
                                         </div>
                                     </Link>
@@ -75,8 +80,11 @@ export default function Page() {
                             } else {
                                 return (
                                     <Link key={i} href={`/dashboard/violation/${v.id}`}>
-                                        <div className="p-2 border-b border-slate-300" key={i}>
-                                            <p className="font-semibold">{formatDateToExactStringAndTime(new Date(String(v.date)) ?? new Date())}</p>
+                                        <div className="p-2 border rounded-md shadow-md border-slate-300" key={i}>
+                                            <div className="flex gap-4">
+                                                <p className="font-semibold">{formatDateToExactString(new Date(String(v.date)) ?? new Date())}</p>
+                                                <p className="text-slate-400">{formatDateToExactTime(new Date(String(v.date)) ?? new Date())}</p>
+                                            </div>
                                             <p className="font-medium text-slate-500">{v.creator?.name}</p>
                                         </div>
                                     </Link>

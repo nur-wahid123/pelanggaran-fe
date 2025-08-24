@@ -15,7 +15,7 @@ export default function StudentCard({ student, ref, isLoading }: { isLoading: bo
             </div>
             <div>
                 <Link
-                    href={`/dashboard/master/student/${student.national_student_id}`}
+                    href={`/dashboard/student/${student.national_student_id}`}
                 >
                     <Button disabled={isLoading}>
                         Detail <Eye />

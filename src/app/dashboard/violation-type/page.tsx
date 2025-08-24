@@ -8,6 +8,7 @@ import useInfiniteScroll from "@/user-components/hook/useInfiniteScroll.hook";
 import SearchBar from "@/user-components/ui/search-bar";
 import AddViolationType from "@/user-components/violation-type/add-violation-type.component";
 import EditViolationType from "@/user-components/violation-type/update-violation-type.component";
+import ViolationTypeCard from "@/user-components/violation-type/violation-type-card.components";
 import ImportViolationType from "@/user-components/violation-type/violation-type-import.component";
 import { axiosInstance } from "@/util/request.util";
 import { Trash } from "lucide-react";
@@ -16,7 +17,6 @@ import { useState } from "react";
 
 export default function Page() {
     const [search, setSearch] = useState("");
-    const toaster = useToast();
     const { data: violationTypes, loading, ref } = useInfiniteScroll<ViolationType, HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
     function handleSearch(query: string) {
         if (query !== search) {
@@ -28,38 +28,7 @@ export default function Page() {
         setSearch('');
     }
 
-    function handleDelete(id: number) {
-        const thisClass = violationTypes.find((c) => c.id === id);
-        if (!thisClass) return;
-        if (thisClass.violations.length > 0) {
-            toaster.toast({
-                title: "Error",
-                description: "Pelanggaran ini sudah dipakai, tidak bisa dihapus",
-                variant: "destructive",
-            })
-            return;
-        }
-        const confirm = window.confirm("Apakah anda yakin ingin menghapus pelanggaran ini?");
-        if (!confirm) {
-            return;
-        }
-        axiosInstance.delete(`${ENDPOINT.DELETE_VIOLATION_TYPE}/${id}`).then(() => {
-            toaster.toast({
-                title: "Success",
-                description: "Pelanggaran berhasil dihapus",
-                variant: "default",
-            })
-            reFetch();
-        })
-            .catch(() => {
-                toaster.toast({
-                    title: "Error",
-                    description: "Gagal menghapus Pelanggaran",
-                    variant: "destructive",
-                })
-            });
-    }
-    const route = useRouter();
+
     return (
         <div className="p-4 w-full">
             <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
@@ -71,8 +40,15 @@ export default function Page() {
                     <AddViolationType reFetch={reFetch} />
                     <ImportViolationType reFetch={reFetch} />
                 </div>
-                <div className="max-h-[31rem] w-full overflow-x-auto max-w-96 md:max-w-full overflow-y-auto">
-                    <Table className="table-fixed w-full">
+                <div className="max-h-[31rem] gap-3 w-full overflow-x-auto overflow-y-auto flex flex-col">
+                    {violationTypes.map((violationType, index) => {
+                       if(violationTypes.length === index + 1){
+                           return <ViolationTypeCard key={index} reFetch={reFetch} ref={ref} violationType={violationType} isLoading={loading} />
+                       } else {
+                           return <ViolationTypeCard key={index} reFetch={reFetch} violationType={violationType} isLoading={loading} />
+                       }
+                    })}
+                    {/* <Table className="table-fixed w-full">
                         <TableHeader className="bg-slate-100 text-black">
                             <TableRow>
                                 <TableHead className="w-8">No</TableHead>
@@ -124,7 +100,7 @@ export default function Page() {
                             {loading && <TableRow><TableCell colSpan={4} className="text-center">Loading...</TableCell></TableRow>}
                             {!loading && violationTypes.length === 0 && <TableRow><TableCell colSpan={4} className="text-center">{search === '' ? 'Data Kosong' : 'Data Tidak Ditemukan'}</TableCell></TableRow>}
                         </TableBody>
-                    </Table>
+                    </Table> */}
                 </div>
             </div>
         </div>

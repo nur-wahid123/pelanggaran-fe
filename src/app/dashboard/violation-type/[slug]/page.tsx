@@ -24,7 +24,6 @@ export default function Page() {
         fetchData();
     }, [])
     const { data: dataV, loading: loadingV, ref: refV } = useInfiniteScroll<Violation, HTMLDivElement>({ filter: { violation_type_id: violationTypeId, type: ViolationTypeEnum.COLLECTION }, take: 10, url: ENDPOINT.MASTER_VIOLATION });
-
     return (
         <div className="p-4">
             <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
@@ -46,19 +45,19 @@ export default function Page() {
                     </tr>
                     <tr>
                         <td className="border p-1">Pelanggaran dilakukan</td>
-                        <td className="border p-1 font-semibold">{data?.violations?.length} Pelanggaran</td>
+                        <td className="border p-1 font-semibold">{data?.violations?.length === 0 ? "Tidak Pernah Dilanggar": `${data?.violations?.length} kali dilanggar`}</td>
                     </tr>
                 </tbody>
             </table>
             <div className="w-full flex flex-col gap-4">
                 <div className="rounded-xl bg-white p-4">
                     <p className="font-bold text-xl">Riwayat Pelanggaran</p>
-                    <div className="max-h-60 overflow-y-auto">
+                    <div className="h-full flex flex-col gap-3 w-full overflow-y-auto">
                         {dataV.map((v, i) => {
                             if (dataV.length === i + 1) {
                                 return (
                                     <Link key={i}  href={`/dashboard/violation/${v.id}`}>
-                                        <div ref={refV} className="p-2 border-b border-slate-300">
+                                        <div ref={refV} className="p-2 border rounded-md shadow-md border-slate-300">
                                             <p className="font-semibold">{formatDateToExactStringAndTime(new Date(String(v.date)) ?? new Date())}</p>
                                             <p className="font-medium text-slate-500">{v.creator?.name}</p>
                                         </div>
@@ -67,7 +66,7 @@ export default function Page() {
                             } else {
                                 return (
                                     <Link key={i} href={`/dashboard/violation/${v.id}`}>
-                                        <div className="p-2 border-b border-slate-300" key={i}>
+                                        <div className="p-2 border rounded-md shadow-md border-slate-300" key={i}>
                                             <p className="font-semibold">{formatDateToExactStringAndTime(new Date(String(v.date)) ?? new Date())}</p>
                                             <p className="font-medium text-slate-500">{v.creator?.name}</p>
                                         </div>
