@@ -18,7 +18,7 @@ export function PreviewImage({ src, alt = "Preview", className }: PreviewImagePr
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="cursor-pointer">
+        <div style={{ backgroundColor: '#ffffff' }} className="cursor-pointer">
           <img
             src={src}
             alt={alt}

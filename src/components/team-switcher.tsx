@@ -33,7 +33,7 @@ export function TeamSwitcher() {
         <div
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground flex gap-1"
         >
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-transparent text-sidebar-primary-foreground">
             {/* <activeTeam.logo className="size-4" /> */}
             <img src={`${ENDPOINT.DETAIL_IMAGE}/${data.logo}`} />
           </div>

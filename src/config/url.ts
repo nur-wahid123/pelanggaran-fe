@@ -53,6 +53,7 @@ const ENDPOINT = {
   GET_PROFILE: `${CONFIG.BASE_URL}/auth/profile`,
   LOGOUT: `${CONFIG.BASE_URL}/auth/logout`,
   ME: `${CONFIG.BASE_URL}/auth/me`,
+  PROFILE: `${CONFIG.BASE_URL}/auth/profile`,
 
   //Users
   CREATE_USER: `${CONFIG.BASE_URL}/users/create`,

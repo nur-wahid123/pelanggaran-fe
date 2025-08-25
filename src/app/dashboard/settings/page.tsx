@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import ENDPOINT from "@/config/url"
 import { useToast } from "@/hooks/use-toast"
+import { PreviewImage } from "@/user-components/preview-image.component"
 import { axiosInstance } from "@/util/request.util"
 import { CircleX, Edit, Save } from "lucide-react"
 import React from "react"
@@ -104,7 +105,7 @@ export default function Page() {
                 </div>
                 <div className="flex flex-col gap-2">
                     <Label>Logo Sekolah</Label>
-                    <img className="bg-transparent" src={`${ENDPOINT.DETAIL_IMAGE}/${logo}`} width={300} alt="Logo" />
+                    <PreviewImage src={`${ENDPOINT.DETAIL_IMAGE}/${logo}`} alt="Logo" />
                     <div className="flex flex-col md:flex-row gap-3">
                         <Input type="file" accept="image/*" onChange={(e) => {
                             const files = e.target.files;

@@ -3,6 +3,7 @@
 import {
   ChevronsUpDown,
   LogOut,
+  User2Icon,
 } from "lucide-react"
 
 import {
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/sidebar"
 import { logout } from "@/util/request.util"
 import { User } from "@/objects/user.object"
+import Link from "next/link"
 
 export function NavUser({
   user,
@@ -33,7 +35,6 @@ export function NavUser({
   user: User
 }) {
   const { isMobile } = useSidebar()
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -73,6 +74,12 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link className="flex gap-2" href={`/dashboard/profile`}>
+                <User2Icon />
+                Profil user
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => logout()}>
               <LogOut />
               Log out
