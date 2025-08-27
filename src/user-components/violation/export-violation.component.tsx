@@ -219,8 +219,8 @@ export default function ExportViolation() {
 
                     const col = index + 8;               // your starting column
                     const row = exampleRow.number - 1;       // the row you want
-                    const imageHeight =200
-                    const imageWidth = (element.width * (imageHeight / element.height));
+                    const imageWidth =200
+                    const imageHeight = (element.height * (imageWidth / element.width));
                     worksheet.addImage(element.imageId, {
                         tl: { col, row },
                         ext: { width: imageWidth, height: imageHeight },
@@ -228,7 +228,7 @@ export default function ExportViolation() {
                     });
 
                     //edit cell size to fit the image
-                    worksheet.getColumn(col+1).width = imageWidth/2; // experiment with this
+                    worksheet.getColumn(col+1).width = imageWidth/7; // experiment with this
                     worksheet.getRow(row+1).height = imageHeight;       // experiment with this
                 }
 
