@@ -22,7 +22,7 @@ const config = {
 export default function Page() {
     const [search, setSearch] = useState("");
     const toaster = useToast();
-    const { data, loading, ref } = useInfiniteScroll<User,HTMLTableRowElement>({ filter: { search }, take: 20, url: config.url });
+    const { data, loading, ref, refresh: reFetch } = useInfiniteScroll<User,HTMLTableRowElement>({ filter: { search }, take: 20, url: config.url });
 
     const handleSearch = useCallback(function (query: string) {
         if (query !== search) {
@@ -30,9 +30,10 @@ export default function Page() {
         }
     }, [search]);
 
-    const reFetch = useCallback(function () {
-        setSearch('');
-    }, []);
+    // const reFetch = useCallback(function () {        
+    //     setSearch('  ');
+    //     setSearch('');
+    // }, [setSearch]);
 
     const handleDelete = useCallback(function (id: number) {
         const thisClass = data.find((c) => c.id === id);

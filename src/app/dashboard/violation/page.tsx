@@ -26,7 +26,7 @@ export default function Page() {
 
     const setDate = useCallback((from: Date, to: Date) => {
         setDateRange({ start_date: formatDate(from), finish_date: formatDate(to) });
-    },[]);
+    },[setDateRange]);
 
     return (
         <div className="p-4">

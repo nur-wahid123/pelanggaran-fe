@@ -120,9 +120,9 @@ export default function Page() {
     }
   }
 
-  function reFetch() {
+  const reFetch = useCallback(() => {
     setPagination({ page: 1, take: pagination.take ?? 20 }); // Reset to first page
-  }
+  }, [setPagination])
 
   return (
     <div className="p-4">

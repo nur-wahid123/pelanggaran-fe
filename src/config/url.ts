@@ -54,11 +54,12 @@ const ENDPOINT = {
   LOGOUT: `${CONFIG.BASE_URL}/auth/logout`,
   ME: `${CONFIG.BASE_URL}/auth/me`,
   PROFILE: `${CONFIG.BASE_URL}/auth/profile`,
+  EDIT_PASSWORD: `${CONFIG.BASE_URL}/auth/edit-password`,
 
   //Users
   CREATE_USER: `${CONFIG.BASE_URL}/users/create`,
   DETAIL_USER: `${CONFIG.BASE_URL}/users/detail`,
-  UPDATE_USER: `${CONFIG.BASE_URL}/users/update`,
+  UPDATE_USER: `${CONFIG.BASE_URL}/users/edit`,
   SELF_UPDATE_USER: `${CONFIG.BASE_URL}/users/self-update`,
   DELETE_USER: `${CONFIG.BASE_URL}/users/remove`,
   MASTER_USER: `${CONFIG.BASE_URL}/users/list`,

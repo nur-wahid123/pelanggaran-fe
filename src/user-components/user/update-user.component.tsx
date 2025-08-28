@@ -53,14 +53,14 @@ export default function EditUser({ id, reFetch }: { id: number | undefined, reFe
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        await axiosInstance.patch(`${ENDPOINT.UPDATE_CLASS}/${id}`, value)
+        await axiosInstance.patch(`${ENDPOINT.UPDATE_USER}/${id}`, value)
             .then(() => {
+                reFetch();
                 toast.toast({
                     title: "Success",
                     description: `Berhasil edit ${config.key_word.toWellFormed()}`,
                     variant: "default",
                 });
-                reFetch();
                 setOpenEdit(false);
             })
             .catch((err) => {

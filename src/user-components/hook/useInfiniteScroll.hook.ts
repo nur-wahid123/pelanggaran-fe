@@ -69,5 +69,14 @@ export default function useInfiniteScroll<T, T2>({
       });
     return () => cancel();
   }, [page, take, memoizedFilter]);
-  return { data, loading, hasMore, error, ref };
+
+  const refresh = useCallback(() => {
+    // setData([]);
+    // setHasMore(true);
+    // setError(false);
+    setPage((e)=> e+1-1);
+  }, []);
+
+  return { data, loading, hasMore, error, ref, refresh };
 }
+

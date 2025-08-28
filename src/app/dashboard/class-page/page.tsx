@@ -15,7 +15,7 @@ import { useCallback, useState } from "react";
 export default function Page() {
     const [search, setSearch] = useState("");
     const toaster = useToast();
-    const { data: classes, loading, ref } = useInfiniteScroll<ClassObject, HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_CLASS });
+    const { data: classes, loading, ref, refresh:reFetch } = useInfiniteScroll<ClassObject, HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_CLASS });
 
     const handleSearch = useCallback(function (query: string) {
         if (query !== search) {
@@ -23,9 +23,10 @@ export default function Page() {
         }
     }, [search]);
 
-    const reFetch = useCallback(function () {
-        setSearch('');
-    }, []);
+    // const reFetch = useCallback(function () {
+    //     setSearch('  ');
+    //     setSearch('');
+    // }, [setSearch]);
 
     const handleDelete = useCallback(function (id: number) {
         const thisClass = classes.find((c) => c.id === id);

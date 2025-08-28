@@ -6,6 +6,7 @@ import {
   GalleryVerticalEnd,
   LayoutDashboard,
   List,
+  PlusSquareIcon,
   Settings,
   Tag,
   User,
@@ -120,13 +121,18 @@ const data = {
       icon: LayoutDashboard,
     },
     {
+      name: "Input Pelanggaran",
+      url: "/dashboard/input-violation",
+      icon: PlusSquareIcon,
+    },
+    
+  ],
+  adminPage: [
+    {
       name: "Data Pelanggaran",
       url: "/dashboard/violation",
       icon: List,
     },
-
-  ],
-  adminPage: [
     {
       name: "Jenis Pelanggaran",
       url: "/dashboard/violation-type",
