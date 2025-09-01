@@ -8,7 +8,7 @@ import { axiosInstance } from "@/util/request.util";
 import { useCallback, useEffect, useState } from "react";
 import { DatePickerWithRange } from "./date-picker";
 import { ChartData } from "./chart-data";
-import { DonutData } from "./donut-data";
+import { ChartBarMixed } from "./bar-charts-data.component";
 
 export default function Statistics() {
   const [data, setData] = useState<DashboardResponseDto>({ student_with_point_more_than_30: [] });
@@ -103,7 +103,7 @@ export default function Statistics() {
           <ChartData from={new Date(dateRange.start_date)} to={new Date(dateRange.finish_date)} />
         </div>
         <div className="">
-          <DonutData />
+          <ChartBarMixed data={data.leaderboard} />
         </div>
       </div>
     </div>

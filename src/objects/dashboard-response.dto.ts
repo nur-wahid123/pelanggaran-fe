@@ -21,4 +21,6 @@ export class DashboardResponseDto {
   violation_percentage_from_last_week?: number;
 
   violation_percentage_from_last_month?: number;
+
+  leaderboard?: { name: string, value: number }[];
 }

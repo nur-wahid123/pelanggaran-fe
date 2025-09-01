@@ -34,21 +34,16 @@ export default function useInfiniteScroll<T, T2>({
     [loading, hasMore],
   );
 
-  useEffect(() => {
-    setData([]);
-    setHasMore(true);
-    setError(false);
-    setPage(1);
-  }, [memoizedFilter]);
 
-  useEffect(() => {
-    let cancel: Canceler;
+  const refresh = useCallback((isNotRefresh?: boolean): Canceler | undefined => {
     setLoading(true);
+    let cancel: Canceler | undefined;
+
     axiosInstance
       .get(url, {
         params: {
-          page: page,
-          take: take,
+          page,
+          take,
           ...memoizedFilter,
         },
         cancelToken: new axios.CancelToken((c) => {
@@ -57,25 +52,45 @@ export default function useInfiniteScroll<T, T2>({
       })
       .then((res) => {
         if (Array.isArray(res.data.data)) {
-          setData((prevData) => [...prevData, ...res.data.data]);
-          setHasMore(res.data.pagination.has_next_page);
-          setLoading(false);
+          // kalau mau reset data setiap ganti filter:
+          if (!isNotRefresh) {
+            setData(res.data.data);
+          } else {
+            // kalau mau infinite scroll:
+            setData((prevData) => [...prevData, ...res.data.data]);
+          }
+
+          setHasMore(res.data.pagination?.has_next_page ?? false);
         }
       })
       .catch((err) => {
-        console.log(err);
+        if (axios.isCancel(err)) {
+          console.log("Request canceled", err.message);
+        } else {
+          console.error(err);
+          setError(true);
+        }
+      })
+      .finally(() => {
         setLoading(false);
-        setError(true);
       });
-    return () => cancel();
-  }, [page, take, memoizedFilter]);
 
-  const refresh = useCallback(() => {
-    // setData([]);
-    // setHasMore(true);
-    // setError(false);
-    setPage((e)=> e+1-1);
-  }, []);
+    return cancel;
+  }, [url, page, take, memoizedFilter]);
+
+  useEffect(() => {
+    setData([]);
+    setHasMore(true);
+    setError(false);
+    setPage(1);
+  }, [memoizedFilter]);
+
+  useEffect(() => {
+    const cancel = refresh(false);
+    return () => {
+      if (cancel) cancel();
+    };
+  }, [page, take, memoizedFilter, refresh]);
 
   return { data, loading, hasMore, error, ref, refresh };
 }

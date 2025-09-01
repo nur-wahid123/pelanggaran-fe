@@ -42,6 +42,8 @@ export default function Page() {
                            return <ViolationTypeCard key={index} reFetch={reFetch} violationType={violationType} isLoading={loading} />
                        }
                     })}
+                    
+                    {violationTypes.length === 0 && !loading && <p className="text-center">Jenis Pelanggaran Kosong</p>}
                 </div>
             </div>
         </div>

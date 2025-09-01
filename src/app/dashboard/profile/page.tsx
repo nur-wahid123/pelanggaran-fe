@@ -118,7 +118,7 @@ export default function Page() {
                 </Dialog>
             </div>
 
-            <div className="flex items-center w-full flex-col md:flex-row gap-4 max-w-72 mt-12 justify-between">
+            <div className="flex items-center w-full flex-col md:flex-row gap-4 max-w-md mt-12 justify-between">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <ShieldAlert className="w-4 h-4" />
                     <span>Mencatat Pelanggaran</span>
