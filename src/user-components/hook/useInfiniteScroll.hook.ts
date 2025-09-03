@@ -86,7 +86,7 @@ export default function useInfiniteScroll<T, T2>({
   }, [memoizedFilter]);
 
   useEffect(() => {
-    const cancel = refresh(false);
+    const cancel = refresh(true);
     return () => {
       if (cancel) cancel();
     };
