@@ -33,12 +33,12 @@ export default function ViolationTypeCard({ reFetch, violationType, ref, isLoadi
             })
             reFetch();
         })
-            .catch(() => {
-                toaster.toast({
-                    title: "Error",
-                    description: "Gagal menghapus Pelanggaran",
-                    variant: "destructive",
-                })
+            .catch((err) => {
+                if (err.code === 400) {
+                    toaster.toast({ title: "Error", description: err.response.data.message[0], variant: "destructive" });
+                } else {
+                    toaster.toast({ title: "Error", description: err.response.data.message, variant: "destructive" });
+                }
             });
     }
     return (

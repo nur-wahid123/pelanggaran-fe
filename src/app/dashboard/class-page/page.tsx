@@ -51,13 +51,13 @@ export default function Page() {
             })
             reFetch();
         })
-            .catch(() => {
-                toaster.toast({
-                    title: "Error",
-                    description: "Gagal menghapus Kelas",
-                    variant: "destructive",
-                })
-            });
+        .catch((err) => {
+            if (err.code === 400) {
+                toaster.toast({ title: "Error", description: err.response.data.message[0], variant: "destructive" });
+            } else {
+                toaster.toast({ title: "Error", description: err.response.data.message, variant: "destructive" });
+            }
+        });
     }, [classes]);
 
     return (
