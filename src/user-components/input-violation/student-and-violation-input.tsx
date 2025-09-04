@@ -26,6 +26,7 @@ export default function StudentAndViolationInput() {
     const [note, setNote] = useState<string>('');
     const toaster = useToast()
     const divRef = useRef<HTMLDivElement>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const divRef2 = useRef<HTMLDivElement>(null);
     const [progress, setProgress] = useState(0);
     const [dialogVisibility, setDialogVisibility] = useState(false);
@@ -33,6 +34,7 @@ export default function StudentAndViolationInput() {
     const { data: dataViolations, loading: loadingViolationTypes, ref: refV } = useInfiniteScroll<ViolationType, HTMLTableRowElement>({ filter: { search: search.violation }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
     const router = useRouter();
     const handleSubmit = async () => {
+        setIsLoading(true);
         const stdIds = studentIds.map((s) => s.id)
         const vltIds = violationIds.map((v) => v.id)
         if (stdIds.length === 0 || vltIds.length === 0) {
@@ -345,7 +347,7 @@ export default function StudentAndViolationInput() {
                                         {progress !== 0 &&
                                             <Progress value={progress} />
                                         }
-                                        <Button onClick={() => handleSubmit()}>Tambahkan</Button>
+                                        <Button disabled={isLoading} onClick={() => handleSubmit()}>Tambahkan</Button>
                                         <Button variant={'outline'} onClick={() => setDialogVisibility(false)}>Batal</Button>
                                     </div>
                                 </div>
