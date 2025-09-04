@@ -4,16 +4,39 @@ import { useRef } from "react";
 
 export default function UploadViolationImages({ files, setFiles }: { files: File[], setFiles: React.Dispatch<React.SetStateAction<File[]>> }) {
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const fileInputRef2 = useRef<HTMLInputElement>(null)
     return (
         <div className="flex flex-col gap-4">
-            <Button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-            >
-                Pilih Gambar
-            </Button>
+            <div className="grid grid-rows-2 md:grid-rows-1 gap-3">
+                <Button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                >
+                    Pilih Gambar Dari File
+                </Button>
+                <Button
+                    type="button"
+                    onClick={() => fileInputRef2.current?.click()}
+                    className="md:hidden"
+                >
+                    Buka Kamera
+                </Button>
+            </div>
             <input
                 ref={fileInputRef}
+                accept="image/*"
+                type="file"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                    if (!e.target.files) return
+                    const newFiles = Array.from(e.target.files)
+                    setFiles((prev) => [...prev, ...newFiles])
+                    e.target.value = ""
+                }}
+            />
+            <input
+                ref={fileInputRef2}
                 accept="image/*"
                 type="file"
                 multiple

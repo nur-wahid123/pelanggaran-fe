@@ -6,11 +6,13 @@ import useDebounce from "@/hooks/useDebounce";
 export default function SearchBar({
   onSearch,
   isLoading,
-  text
+  text,
+  className
 }: {
   onSearch: (query: string) => void;
   isLoading?: boolean;
   text?: string;
+  className?: string[];
 }) {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 500);
@@ -31,7 +33,7 @@ export default function SearchBar({
             type="text"
             disabled={isLoading ? isLoading : false}
             placeholder={text ?? "Cari..."}
-            className="rounded-lg appearance-none w-72 pl-8 text-xs"
+            className={"rounded-lg appearance-none w-72 pl-8 text-xs " + className?.join(" ")}
             onChange={(e) => { handleChange(e) }}
             value={query}
           />

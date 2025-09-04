@@ -27,7 +27,7 @@ export default function ViolationCard({ filter }: { filter: { search: string, st
                                     <p className="flex items-center">Siswa : {violation.students?.length} Siswa</p>
                                     <p className="flex items-center">Poin Per Siswa : {violation.violation_types?.reduce((acc, curr) => acc + curr.point, 0)} Poin</p>
                                 </div>
-                                <p className="text-sm whitespace-nowrap text-slate-600"> Catatan : {violation.note ? violation.note : '-'}</p>
+                                <p className="text-sm text-slate-600"> Catatan : {violation.note ? violation.note : '-'}</p>
                                 <p className="text-md text-start mdd:text-end text-slate-400">
                                     {violation.creator ? violation.creator.name : ''}
                                 </p>
@@ -50,7 +50,7 @@ export default function ViolationCard({ filter }: { filter: { search: string, st
                                     <p className="flex items-center">Siswa : {violation.students?.length} Siswa</p>
                                     <p className="flex items-center">Poin Per Siswa : {violation.violation_types?.reduce((acc, curr) => acc + curr.point, 0)} Poin</p>
                                 </div>
-                                <p className="text-sm whitespace-nowrap text-slate-600"> Catatan : {violation.note ? violation.note : '-'}</p>
+                                <p className="text-sm text-slate-600"> Catatan : {violation.note ? violation.note : '-'}</p>
                                 <p className="text-md text-start mdd:text-end text-slate-400">
                                     {violation.creator ? violation.creator.name : ''}
                                 </p>

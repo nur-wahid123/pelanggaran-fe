@@ -4,8 +4,8 @@ import ENDPOINT from "@/config/url";
 import { Student } from "@/objects/student.object";
 import { ViolationType } from "@/objects/violation-type.object";
 import { axiosInstance } from "@/util/request.util";
-import { PlusCircleIcon, RefreshCwIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { ArrowDownSquare, PlusCircleIcon, RefreshCwIcon } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
 import Summary from "./summary.component";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -25,6 +25,8 @@ export default function StudentAndViolationInput() {
     const [search, setSearch] = useState<{ student: string, violation: string }>({ student: '', violation: '' });
     const [note, setNote] = useState<string>('');
     const toaster = useToast()
+    const divRef = useRef<HTMLDivElement>(null);
+    const divRef2 = useRef<HTMLDivElement>(null);
     const [progress, setProgress] = useState(0);
     const [dialogVisibility, setDialogVisibility] = useState(false);
     const { data: dataStudents, loading: loadingStudent, ref: refS } = useInfiniteScroll<Student, HTMLTableRowElement>({ filter: { search: search.student }, take: 20, url: ENDPOINT.MASTER_STUDENT })
@@ -114,14 +116,15 @@ export default function StudentAndViolationInput() {
         <div className="flex flex-col gap-4">
             <div className="w-full grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 gap-3 ">
                 <div className="w-full flex flex-col gap-2">
-                    <div className="flex gap-3">
+                    <div className="flex flex-col gap-3">
                         <SearchBar text="Cari Siswa....." onSearch={handleSearch} />
+                        <Button type="button" size={'sm'} className="md:hidden" onClick={() => divRef.current?.scrollIntoView({ behavior: 'smooth' })}><ArrowDownSquare/></Button>
                     </div>
                     <div className="w-full h-full max-h-96 overflow-auto">
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>
+                                    <TableHead className="">
                                         Nama Siswa
                                     </TableHead>
                                     <TableHead>
@@ -149,7 +152,10 @@ export default function StudentAndViolationInput() {
                                                 <TableCell>
                                                     <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
                                                         setStudentIds([...studentIds, student])
-                                                    }} className="btn btn-primary">Tambahkan Siswa <PlusCircleIcon /></Button>
+                                                    }} className="btn hidden md:flex btn-primary">Tambahkan Siswa <PlusCircleIcon /></Button>
+                                                    <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
+                                                        setStudentIds([...studentIds, student])
+                                                    }} className="btn md:hidden btn-primary"><PlusCircleIcon /></Button>
                                                 </TableCell>
                                             </TableRow>
                                         )
@@ -166,9 +172,12 @@ export default function StudentAndViolationInput() {
                                                     {student.school_student_id}
                                                 </TableCell>
                                                 <TableCell>
+                                                <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
+                                                        setStudentIds([...studentIds, student])
+                                                    }} className="btn hidden md:flex btn-primary">Tambahkan Siswa <PlusCircleIcon /></Button>
                                                     <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
                                                         setStudentIds([...studentIds, student])
-                                                    }} className="btn btn-primary">Tambahkan Siswa <PlusCircleIcon /></Button>
+                                                    }} className="btn md:hidden btn-primary"><PlusCircleIcon /></Button>
                                                 </TableCell>
                                             </TableRow>
                                         )
@@ -181,8 +190,9 @@ export default function StudentAndViolationInput() {
                     </div>
                 </div>
                 <div className="w-full flex flex-col gap-2">
-                    <div className="flex gap-3">
+                    <div ref={divRef} className="flex flex-col gap-3">
                         <SearchBar text={"Cari Pelanggaran....."} onSearch={handleSearchVi} />
+                        <Button size={'sm'} className="md:hidden" type="button" onClick={() => divRef2.current?.scrollIntoView({ behavior: 'smooth' })}><ArrowDownSquare/></Button>
                     </div>
                     <div className="w-full h-full max-h-96 overflow-auto">
                         <Table>
@@ -215,7 +225,10 @@ export default function StudentAndViolationInput() {
                                                 <TableCell>
                                                     <Button size={"sm"} disabled={violationIds.map(v => v.id).includes(violation.id)} onClick={() => {
                                                         setViolationIds([...violationIds, violation])
-                                                    }} className="btn btn-primary">Tambahkan Pelanggaran <PlusCircleIcon /></Button>
+                                                    }} className="btn hidden md:flex btn-primary">Tambahkan Pelanggaran <PlusCircleIcon /></Button>
+                                                    <Button size={"sm"} disabled={violationIds.map(v => v.id).includes(violation.id)} onClick={() => {
+                                                        setViolationIds([...violationIds, violation])
+                                                    }} className="btn md:hidden btn-primary"><PlusCircleIcon /></Button>
                                                 </TableCell>
                                             </TableRow>
                                         )
@@ -231,9 +244,12 @@ export default function StudentAndViolationInput() {
                                                     {violation.point}
                                                 </TableCell>
                                                 <TableCell>
+                                                <Button size={"sm"} disabled={violationIds.map(v => v.id).includes(violation.id)} onClick={() => {
+                                                        setViolationIds([...violationIds, violation])
+                                                    }} className="btn hidden md:flex btn-primary">Tambahkan Pelanggaran <PlusCircleIcon /></Button>
                                                     <Button size={"sm"} disabled={violationIds.map(v => v.id).includes(violation.id)} onClick={() => {
                                                         setViolationIds([...violationIds, violation])
-                                                    }} className="btn btn-primary">Tambahkan Pelanggaran <PlusCircleIcon /></Button>
+                                                    }} className="btn md:hidden btn-primary"><PlusCircleIcon /></Button>
                                                 </TableCell>
                                             </TableRow>
                                         )
@@ -247,7 +263,7 @@ export default function StudentAndViolationInput() {
                 </div>
             </div>
             <div className="flex flex-col min-h-56 flex-grow w-full">
-                <div className="flex gap-6 items-center">
+                <div ref={divRef2} className="flex gap-6 items-center">
                     <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
                         Detail Pelanggaran
                     </h1>

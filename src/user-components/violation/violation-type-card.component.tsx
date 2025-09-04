@@ -12,7 +12,7 @@ export default function ViolationTypeCard({ filter }: { filter: { search: string
             {data.map((violation_type, i) => {
                 if (data.length === i + 1) {
                     return (
-                        <div onClick={() => router.push(`/dashboard/violation-type/${violation_type.id}`)} key={i} ref={ref} className={"h-36 w-full gap-2 grid cursor-pointergrid-cols-2 hover:border-slate-900 hover:scale-[99%] transition rounded-xl bg-white border border-slate-300 p-4 shadow-xl"}>
+                        <div onClick={() => router.push(`/dashboard/violation-type/${violation_type.id}`)} key={i} ref={ref} className={" w-full gap-2 grid cursor-pointergrid-cols-2 hover:border-slate-900 hover:scale-[99%] transition rounded-xl bg-white border border-slate-300 p-4 shadow-xl"}>
                             <p className="text-md flex items-center font-semibold">
                                 {violation_type.name ? violation_type.name : ''}
                             </p>
@@ -32,7 +32,7 @@ export default function ViolationTypeCard({ filter }: { filter: { search: string
                     )
                 } else {
                     return (
-                        <div onClick={() => router.push(`/dashboard/violation-type/${violation_type.id}`)} key={i} className={"h-36 w-full gap-2 cursor-pointer grid grid-cols-2 hover:border-slate-900 hover:scale-[99%] transition rounded-xl bg-white border border-slate-300 p-4 shadow-xl"}>
+                        <div onClick={() => router.push(`/dashboard/violation-type/${violation_type.id}`)} key={i} className={" w-full gap-2 grid cursor-pointergrid-cols-2 hover:border-slate-900 hover:scale-[99%] transition rounded-xl bg-white border border-slate-300 p-4 shadow-xl"}>
                             <p className="text-md flex items-center font-semibold">
                                 {violation_type.name ? violation_type.name : ''}
                             </p>
