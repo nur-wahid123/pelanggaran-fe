@@ -15,6 +15,8 @@ import useInfiniteScroll from "../hook/useInfiniteScroll.hook";
 import SearchBar from "../ui/search-bar";
 import UploadViolationImages from "../violation/upload-violation-image.component";
 import { Progress } from "@/components/ui/progress";
+import { Violation } from "@/objects/violation.object";
+import { useRouter } from "next/navigation";
 
 export default function StudentAndViolationInput() {
     const [files, setFiles] = useState<File[]>([]);
@@ -27,6 +29,7 @@ export default function StudentAndViolationInput() {
     const [dialogVisibility, setDialogVisibility] = useState(false);
     const { data: dataStudents, loading: loadingStudent, ref: refS } = useInfiniteScroll<Student, HTMLTableRowElement>({ filter: { search: search.student }, take: 20, url: ENDPOINT.MASTER_STUDENT })
     const { data: dataViolations, loading: loadingViolationTypes, ref: refV } = useInfiniteScroll<ViolationType, HTMLTableRowElement>({ filter: { search: search.violation }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
+    const router = useRouter();
     const handleSubmit = async () => {
         const stdIds = studentIds.map((s) => s.id)
         const vltIds = violationIds.map((v) => v.id)
@@ -68,7 +71,11 @@ export default function StudentAndViolationInput() {
                     const percentCompleted = ((Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 0)) / 100) * 50) + 50;
                     setProgress(percentCompleted);
                 }
+            }).then((res) => {
+                const a = res.data.data as Violation
+                router.push(`/dashboard/input-violation-confirmation/${a.id}`)
             })
+
             toaster.toast({ description: 'Berhasil Menambahkan Data', title: 'Sukses' })
             setStudentIds([])
             setViolationIds([])

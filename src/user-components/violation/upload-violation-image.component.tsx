@@ -17,12 +17,13 @@ export default function UploadViolationImages({ files, setFiles }: { files: File
                 accept="image/*"
                 type="file"
                 multiple
+                capture="environment"
                 className="hidden"
                 onChange={(e) => {
-                    if (e.target.files?.length) {
-                        const filesArray = Array.from(e.target.files).slice(0, 5);
-                        setFiles(filesArray);
-                    }
+                    if (!e.target.files) return
+                    const newFiles = Array.from(e.target.files)
+                    setFiles((prev) => [...prev, ...newFiles])
+                    e.target.value = ""
                 }}
             />
             {files.length > 0 &&
