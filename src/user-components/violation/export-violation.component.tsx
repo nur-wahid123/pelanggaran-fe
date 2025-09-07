@@ -137,6 +137,8 @@ export default function ExportViolation() {
             { header: 'Jumlah Pelanggaran', width: 20 },
             { header: 'Nama Pelanggaran', width: 90 },
             { header: 'Poin', width: 8 },
+            { header: 'Pencatat', width: 25 },
+            { header: 'Catatan', width: 20 },
             { header: 'Nama Siswa', width: 30 },
         ];
 
@@ -162,8 +164,8 @@ export default function ExportViolation() {
                 // }
                 // dataCollection.map(async (violation, i) => {
                 const imageIds = []
-                for (let index = 0; index < (violation.images?.length ?? 0); index++) {
-                    const element = violation.images[index] ?? [];
+                for (let index = 0; index < (violation.image?.images.length ?? 0); index++) {
+                    const element = violation.image?.images[index] ?? [];
 
                     const response = await fetch(`${ENDPOINT.DETAIL_IMAGE}/${element}`);
                     const contentType = response.headers.get("content-type");
@@ -212,6 +214,8 @@ export default function ExportViolation() {
                     `${violation.violation_types ? violation.violation_types.length : 0} Pelanggaran`,
                     `${violation.violation_types ? violation.violation_types[0].name : ''}`,
                     `${violation.violation_types ? violation.violation_types[0].point : 0} Poin`,
+                    `${violation.creator ? violation.creator.name : ""}`,
+                    `${violation.note ? violation.note : ""}`,
                     `${violation.students ? violation.students[0].name : ''}`,
                 ]);
                 for (let index = 0; index < imageIds.length; index++) {
