@@ -10,17 +10,12 @@ import { useCallback, useState } from "react";
 
 export default function Page() {
     const [search, setSearch] = useState("");
-    const { data: violationTypes, loading, ref } = useInfiniteScroll<ViolationType, HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
+    const { data: violationTypes, loading, ref, refresh } = useInfiniteScroll<ViolationType, HTMLTableRowElement>({ filter: { search }, take: 20, url: ENDPOINT.MASTER_VIOLATION_TYPE })
     function handleSearch(query: string) {
         if (query !== search) {
             setSearch(query);
         }
     }
-
-    const reFetch = useCallback(() => {
-        setSearch('  ');
-        setSearch('');
-    }, [setSearch])
 
 
     return (
@@ -31,15 +26,15 @@ export default function Page() {
             <div className="w-full flex flex-col gap-4">
                 <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
                     <SearchBar onSearch={handleSearch} />
-                    <AddViolationType reFetch={reFetch} />
-                    <ImportViolationType reFetch={reFetch} />
+                    <AddViolationType reFetch={refresh} />
+                    <ImportViolationType reFetch={refresh} />
                 </div>
                 <div className="max-h-[31rem] gap-3 w-full overflow-x-auto overflow-y-auto flex flex-col">
                     {violationTypes.map((violationType, index) => {
                        if(violationTypes.length === index + 1){
-                           return <ViolationTypeCard key={index} reFetch={reFetch} ref={ref} violationType={violationType} isLoading={loading} />
+                           return <ViolationTypeCard key={index} reFetch={refresh} ref={ref} violationType={violationType} isLoading={loading} />
                        } else {
-                           return <ViolationTypeCard key={index} reFetch={reFetch} violationType={violationType} isLoading={loading} />
+                           return <ViolationTypeCard key={index} reFetch={refresh} violationType={violationType} isLoading={loading} />
                        }
                     })}
                     

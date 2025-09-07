@@ -1,3 +1,4 @@
+import { ImageLink } from "./image-link.object";
 import { Student } from "./student.object";
 import { User } from "./user.object";
 import { ViolationType } from "./violation-type.object";
@@ -5,15 +6,13 @@ import { ViolationType } from "./violation-type.object";
 export interface Violation {
   id?: number;
 
-  imageGroupId?: number;
-
   date?: Date;
 
   note?: string;
 
   creator: User;
 
-  images: number[];
+  image: ImageLink | null;
 
   students: Student[];
 

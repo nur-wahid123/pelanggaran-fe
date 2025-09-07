@@ -121,7 +121,8 @@ export default function Page() {
   }
 
   const reFetch = useCallback(() => {
-    setPagination({ page: 1, take: pagination.take ?? 20 }); // Reset to first page
+    fetchData(1, pagination.take ?? 20);
+    // setPagination({ page: 1, take: pagination.take ?? 20 }); // Reset to first page
   }, [setPagination])
 
   return (

@@ -15,21 +15,22 @@ export default function Page() {
     const violationId = useMemo(() => { return String(param.slug) }, [param])
     const [violation, setViolation] = useState<Violation | undefined>(undefined)
     const [images, setImages] = useState<number[]>([]);
+    const fetchImage = useCallback(async (violation: Violation) => {
+        await axiosInstance.get(`${ENDPOINT.LIST_IMAGE}/${violation.image?.id}`).then((res) => {
+            setImages(res.data.data)
+        })
+    }, [violation])
+    
     const fetchData = useCallback(async () => {
         await axiosInstance.get(`${ENDPOINT.DETAIL_VIOLATION}/${violationId}`).then((res) => {
             setViolation(res.data.data)
-            if (!res.data.data.imageGroupId) {
+            if (!res.data.data.image) {
                 return
             }
             fetchImage(res.data.data)
         })
-    }, [violation])
+    }, [violation, fetchImage])
 
-    const fetchImage = useCallback(async (violation: Violation) => {
-        await axiosInstance.get(`${ENDPOINT.LIST_IMAGE}/${violation.imageGroupId}`).then((res) => {
-            setImages(res.data.data)
-        })
-    }, [violation])
     useEffect(() => {
         fetchData();
     }, [])
@@ -103,7 +104,7 @@ export default function Page() {
                 ))}
             </div>
             <Separator className="my-4"/>
-            {violation?.imageGroupId &&
+            {violation?.image &&
                 <div>
                     <h1 className="scroll-m-20 text-xl mb-4 font-extrabold tracking-tight lg:text-2xl">
                         Gambar

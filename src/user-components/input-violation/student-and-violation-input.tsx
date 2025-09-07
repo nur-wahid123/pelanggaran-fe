@@ -39,6 +39,7 @@ export default function StudentAndViolationInput() {
         const vltIds = violationIds.map((v) => v.id)
         if (stdIds.length === 0 || vltIds.length === 0) {
             toaster.toast({ description: 'Data Harus Lengkap', title: 'Gagal', variant: 'destructive' })
+            setIsLoading(false)
             return;
         }
         let imageId;
@@ -57,6 +58,7 @@ export default function StudentAndViolationInput() {
 
             imageId = res.data.data
         } catch (error) {
+            setIsLoading(false)
             setProgress(0)
             console.log(error);
             toaster.toast({ description: 'Data Gagal Di Input', title: 'Gagal', variant: 'destructive' })
@@ -76,18 +78,19 @@ export default function StudentAndViolationInput() {
                     setProgress(percentCompleted);
                 }
             }).then((res) => {
-                const a = res.data.data as Violation
-                router.push(`/dashboard/input-violation-confirmation/${a.id}`)
+                
+                const a = res.data.data as number
+                router.push(`/dashboard/input-violation-confirmation/${a}`)
+            }).catch((e) => {
+                console.log(e);
+                setProgress(0)
+                toaster.toast({ description: 'Data Gagal Di Input', title: 'Gagal', variant: 'destructive' })
+                setIsLoading(false)
             })
 
             toaster.toast({ description: 'Berhasil Menambahkan Data', title: 'Sukses' })
-            setStudentIds([])
-            setViolationIds([])
-            setNote('')
             setSearch({ ...search, student: '', violation: '' })
-            setDialogVisibility(false)
             setProgress(0)
-            setFiles([])
         } catch (e) {
             setProgress(0)
             console.log(e);
@@ -120,7 +123,7 @@ export default function StudentAndViolationInput() {
                 <div className="w-full flex flex-col gap-2">
                     <div className="flex flex-col gap-3">
                         <SearchBar text="Cari Siswa....." onSearch={handleSearch} />
-                        <Button type="button" size={'sm'} className="md:hidden" onClick={() => divRef.current?.scrollIntoView({ behavior: 'smooth' })}><ArrowDownSquare/></Button>
+                        <Button type="button" size={'sm'} className="md:hidden" onClick={() => divRef.current?.scrollIntoView({ behavior: 'smooth' })}><ArrowDownSquare /></Button>
                     </div>
                     <div className="w-full h-full max-h-96 overflow-auto">
                         <Table>
@@ -174,7 +177,7 @@ export default function StudentAndViolationInput() {
                                                     {student.school_student_id}
                                                 </TableCell>
                                                 <TableCell>
-                                                <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
+                                                    <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
                                                         setStudentIds([...studentIds, student])
                                                     }} className="btn hidden md:flex btn-primary">Tambahkan Siswa <PlusCircleIcon /></Button>
                                                     <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
@@ -194,7 +197,7 @@ export default function StudentAndViolationInput() {
                 <div className="w-full flex flex-col gap-2">
                     <div ref={divRef} className="flex flex-col gap-3">
                         <SearchBar text={"Cari Pelanggaran....."} onSearch={handleSearchVi} />
-                        <Button size={'sm'} className="md:hidden" type="button" onClick={() => divRef2.current?.scrollIntoView({ behavior: 'smooth' })}><ArrowDownSquare/></Button>
+                        <Button size={'sm'} className="md:hidden" type="button" onClick={() => divRef2.current?.scrollIntoView({ behavior: 'smooth' })}><ArrowDownSquare /></Button>
                     </div>
                     <div className="w-full h-full max-h-96 overflow-auto">
                         <Table>
@@ -246,7 +249,7 @@ export default function StudentAndViolationInput() {
                                                     {violation.point}
                                                 </TableCell>
                                                 <TableCell>
-                                                <Button size={"sm"} disabled={violationIds.map(v => v.id).includes(violation.id)} onClick={() => {
+                                                    <Button size={"sm"} disabled={violationIds.map(v => v.id).includes(violation.id)} onClick={() => {
                                                         setViolationIds([...violationIds, violation])
                                                     }} className="btn hidden md:flex btn-primary">Tambahkan Pelanggaran <PlusCircleIcon /></Button>
                                                     <Button size={"sm"} disabled={violationIds.map(v => v.id).includes(violation.id)} onClick={() => {
