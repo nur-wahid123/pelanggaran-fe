@@ -6,7 +6,7 @@ import SearchBar from "@/user-components/ui/search-bar";
 import AddViolationType from "@/user-components/violation-type/add-violation-type.component";
 import ViolationTypeCard from "@/user-components/violation-type/violation-type-card.components";
 import ImportViolationType from "@/user-components/violation-type/violation-type-import.component";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 export default function Page() {
     const [search, setSearch] = useState("");

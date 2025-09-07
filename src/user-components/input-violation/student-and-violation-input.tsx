@@ -15,7 +15,6 @@ import useInfiniteScroll from "../hook/useInfiniteScroll.hook";
 import SearchBar from "../ui/search-bar";
 import UploadViolationImages from "../violation/upload-violation-image.component";
 import { Progress } from "@/components/ui/progress";
-import { Violation } from "@/objects/violation.object";
 import { useRouter } from "next/navigation";
 
 export default function StudentAndViolationInput() {
