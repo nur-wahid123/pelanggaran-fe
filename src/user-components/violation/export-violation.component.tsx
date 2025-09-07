@@ -43,7 +43,6 @@ export const makeMonthYear = (startDate: Date) => {
 export default function ExportViolation() {
     const appStartDate = process.env.NEXT_PUBLIC_APP_START_DATE ? new Date(process.env.NEXT_PUBLIC_APP_START_DATE) : new Date('01-2025');
     const months = makeMonthYear(appStartDate);
-    // const [monthYears, setMonthYears] = useState<string[][]>([]);
     const [loading, setLoading] = useState(false);
     const thisMnth = useMemo(() => thisMonth(), []);
     const [selectedMonth, setSelectedMonth] = useState(0);
@@ -52,11 +51,8 @@ export default function ExportViolation() {
     const setDate = useCallback((from: Date, to: Date) => {
         setDateRange({ start_date: formatDate(from), finish_date: formatDate(to) });
     }, []);
-    // const [dataCollection, setDataCollection] = useState<Violation[]>([]);
-    // const [dataPerStudent, setDataPerStudent] = useState<Student[]>([]);
-    // const [dataPerViolationType, setDataPerViolationType] = useState<ViolationType[]>([]);
-    // const [hasMore, setHasMore] = useState(true);
     const [progress, setProgress] = useState(0);
+
 
     const fetchData = useCallback(async (page: number, take: number, type: ViolationTypeEnum, data: Violation[] | Student[] | ViolationType[]): Promise<boolean> => {
         let hasNext = true;
@@ -71,19 +67,13 @@ export default function ExportViolation() {
             .then(res => {
                 if (Array.isArray(res.data.data)) {
                     if (type === ViolationTypeEnum.COLLECTION) {
-                        // setDataCollection(prevData => [...prevData, ...res.data.data]);
-                        // data = [...data, ...res.data.data];
                         data.push(...res.data.data);
                     }
                     if (type === ViolationTypeEnum.PER_STUDENT) {
-                        // setDataPerStudent(prevData => [...prevData, ...res.data.data]);
                         data.push(...res.data.data);
-                        // data = [...data, ...res.data.data];
                     }
                     if (type === ViolationTypeEnum.PER_VIOLATION_TYPE) {
-                        // setDataPerViolationType(prevData => [...prevData, ...res.data.data]);
                         data.push(...res.data.data);
-                        // data = [...data, ...res.data.data];
                     }
                     hasNext = res.data.pagination.has_next_page;
                 }
@@ -96,37 +86,42 @@ export default function ExportViolation() {
     }, [dateRange]);
 
     const fetchDatas = useCallback(async () => {
+        setLoading(true);
         let hasNext = true
         let page = 1
         const dataCollection: Violation[] = [];
         const dataPerStudent: Student[] = [];
         const dataPerViolationType: ViolationType[] = [];
         while (hasNext) {
-            const res = await fetchData(page, 100, ViolationTypeEnum.COLLECTION, dataCollection);
-            hasNext = res;
-            page++
+            await fetchData(page, 100, ViolationTypeEnum.COLLECTION, dataCollection).then((res) => {
+                hasNext = res;
+                page++
+                setProgress(20);
+            });
         }
-        setProgress(20);
         hasNext = true;
         page = 1
         while (hasNext) {
-            hasNext = await fetchData(page, 100, ViolationTypeEnum.PER_STUDENT, dataPerStudent);
-            page++
+            await fetchData(page, 100, ViolationTypeEnum.PER_STUDENT, dataPerStudent).then((res) => {
+                hasNext = res;
+                page++
+                setProgress(30);
+            });
         }
-        setProgress(30);
         hasNext = true;
         page = 1
         while (hasNext) {
-            hasNext = await fetchData(page, 100, ViolationTypeEnum.PER_VIOLATION_TYPE, dataPerViolationType);
-            page++
+            await fetchData(page, 100, ViolationTypeEnum.PER_VIOLATION_TYPE, dataPerViolationType).then((res) => {
+                hasNext = res
+                page++
+                setProgress(40);
+            });
         }
-        setProgress(40);
         exportData(dataCollection, dataPerStudent, dataPerViolationType);
     }, [fetchData]);
 
     const exportData = useCallback(async (dataCollection: Violation[], dataPerStudent: Student[], dataPerViolationType: ViolationType[]) => {
-        setLoading(true);
-        setProgress(0);
+        setProgress(50);
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Per Pelanggaran');
         const columns = [
@@ -157,17 +152,23 @@ export default function ExportViolation() {
         });
 
         try {
-
+            const allImagesCount = dataCollection.map((item) => item.image?.images.length ?? 0).reduce((a, b) => a + b, 0);
+            let currentImage = 1;
+            // this take 20 percent of the progress
             for (let i = 0; i < dataCollection.length; i++) {
                 const violation = dataCollection[i];
 
-                // }
-                // dataCollection.map(async (violation, i) => {
                 const imageIds = []
                 for (let index = 0; index < (violation.image?.images.length ?? 0); index++) {
-                    const element = violation.image?.images[index] ?? [];
+                    const element = violation.image?.images[index];
 
-                    const response = await fetch(`${ENDPOINT.DETAIL_IMAGE}/${element}`);
+                    if (!element) continue;
+
+                    const response = await fetch(`${ENDPOINT.DETAIL_IMAGE}/${element.id}`).then((res) => {
+                        setProgress(currentImage / allImagesCount * 20 + 50);
+                        currentImage++
+                        return res
+                    });
                     const contentType = response.headers.get("content-type");
 
                     if (!contentType) {
@@ -221,9 +222,9 @@ export default function ExportViolation() {
                 for (let index = 0; index < imageIds.length; index++) {
                     const element = imageIds[index];
 
-                    const col = index + 8;               // your starting column
+                    const col = index + 10;               // your starting column
                     const row = exampleRow.number - 1;       // the row you want
-                    const imageWidth =200
+                    const imageWidth = 200
                     const imageHeight = (element.height * (imageWidth / element.width));
                     worksheet.addImage(element.imageId, {
                         tl: { col, row },
@@ -232,8 +233,8 @@ export default function ExportViolation() {
                     });
 
                     //edit cell size to fit the image
-                    worksheet.getColumn(col+1).width = imageWidth/7; // experiment with this
-                    worksheet.getRow(row+1).height = imageHeight;       // experiment with this
+                    worksheet.getColumn(col + 1).width = imageWidth / 7; // experiment with this
+                    worksheet.getRow(row + 1).height = imageHeight;       // experiment with this
                 }
 
                 exampleRow.eachCell((cell) => {
@@ -261,7 +262,7 @@ export default function ExportViolation() {
         } catch (e) {
             console.log(e);
         }
-        setProgress(50);
+        setProgress(75);
 
         const worksheet2 = workbook.addWorksheet('Per Siswa');
         const columns2 = [
@@ -365,7 +366,7 @@ export default function ExportViolation() {
             });
             row2.commit();
         })
-        setProgress(60);
+        setProgress(80);
 
         const worksheet3 = workbook.addWorksheet('Per Tipe Pelanggaran');
         const columns3 = [
@@ -399,7 +400,7 @@ export default function ExportViolation() {
             });
             exampleRow.commit();
         })
-        setProgress(80);
+        setProgress(85);
 
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -436,7 +437,7 @@ export default function ExportViolation() {
                     <DialogDescription asChild>
                         <div className="flex flex-col gap-4">
                             <Label>Jenis Export</Label>
-                            <Select value={exportType} onValueChange={(e) => e === "date-range" ? setExportType("date-range") : setExportType("per-month")}>
+                            <Select disabled={loading} value={exportType} onValueChange={(e) => e === "date-range" ? setExportType("date-range") : setExportType("per-month")}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Theme" />
                                 </SelectTrigger>
@@ -448,12 +449,12 @@ export default function ExportViolation() {
                             {exportType === "date-range" ?
                                 <div className="flex flex-col gap-4">
                                     <Label>Pilih Tanggal</Label>
-                                    <DatePickerWithRange startDate={new Date(dateRange.start_date)} finishDate={new Date(dateRange.finish_date)} setOutDate={setDate} />
+                                    <DatePickerWithRange disabled={loading ? "disabled" : "active"} startDate={new Date(dateRange.start_date)} finishDate={new Date(dateRange.finish_date)} setOutDate={setDate} />
                                 </div>
                                 :
                                 <div className="flex flex-col gap-4">
                                     <Label>Pilih Bulan</Label>
-                                    <Select value={selectedMonth.toString()} onValueChange={(e) => setSelectedMonth(parseInt(e))}>
+                                    <Select disabled={loading} value={selectedMonth.toString()} onValueChange={(e) => setSelectedMonth(parseInt(e))}>
                                         <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Theme" />
                                         </SelectTrigger>
@@ -464,7 +465,7 @@ export default function ExportViolation() {
                                 </div>
                             }
                             {loading && <Progress value={progress} max={100} />}
-                            <Button onClick={() => fetchDatas()}>Export</Button>
+                            <Button disabled={loading} onClick={() => fetchDatas()}>Export</Button>
                         </div>
 
                     </DialogDescription>

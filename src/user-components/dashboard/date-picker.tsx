@@ -19,7 +19,8 @@ export function DatePickerWithRange({
   setOutDate,
   startDate,
   finishDate,
-}: {attr?: React.HTMLAttributes<HTMLDivElement>, finishDate: Date, startDate: Date, setOutDate: (from: Date, to: Date) => void}) {
+  disabled
+}: {disabled?: "disabled"|"active", attr?: React.HTMLAttributes<HTMLDivElement>, finishDate: Date, startDate: Date, setOutDate: (from: Date, to: Date) => void}) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: startDate,
     to: finishDate,
@@ -35,6 +36,7 @@ export function DatePickerWithRange({
       <Popover>
         <PopoverTrigger asChild>
           <Button
+          disabled={disabled === "disabled"}
             id="date"
             variant={"outline"}
             className={cn(

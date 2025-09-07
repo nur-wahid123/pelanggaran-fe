@@ -34,6 +34,7 @@ export default function StudentAndViolationInput() {
     const router = useRouter();
     const handleSubmit = async () => {
         setIsLoading(true);
+        setProgress(10)
         const stdIds = studentIds.map((s) => s.id)
         const vltIds = violationIds.map((v) => v.id)
         if (stdIds.length === 0 || vltIds.length === 0) {
@@ -47,8 +48,8 @@ export default function StudentAndViolationInput() {
             files.forEach((f) => fd.append('files', f));
             const res = await axiosInstance.post(ENDPOINT.UPLOAD_IMAGE, fd, {
                 onUploadProgress: (progressEvent) => {
-                    const percentCompleted = (Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 0)) / 100) * 50;
-                    setProgress(percentCompleted);
+                    const percentCompleted = (Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 0)) / 100) * 30 + 10;
+                    setProgress(percentCompleted > 40 ? 40 : percentCompleted);
                 },
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -73,11 +74,11 @@ export default function StudentAndViolationInput() {
         try {
             await axiosInstance.post(ENDPOINT.CREATE_VIOLATION, body, {
                 onUploadProgress: (progressEvent) => {
-                    const percentCompleted = ((Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 0)) / 100) * 50) + 50;
-                    setProgress(percentCompleted);
+                    const percentCompleted = ((Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 0)) / 100) * 50) + 40;
+                    setProgress(percentCompleted > 90 ? 90 : percentCompleted);
                 }
             }).then((res) => {
-                
+                setProgress(100)
                 const a = res.data.data as number
                 router.push(`/dashboard/input-violation-confirmation/${a}`)
             }).catch((e) => {
@@ -343,14 +344,14 @@ export default function StudentAndViolationInput() {
                                     </div>
                                     <div className="flex flex-col gap-2 text-black">
                                         <div className="font-semibold">Catatan</div>
-                                        <Textarea value={note} onChange={(e) => setNote(e.target.value)} />
+                                        <Textarea disabled={isLoading} value={note} onChange={(e) => setNote(e.target.value)} />
                                     </div>
                                     <div className="flex gap-3 justify-center">
                                         {progress !== 0 &&
                                             <Progress value={progress} />
                                         }
                                         <Button disabled={isLoading} onClick={() => handleSubmit()}>Tambahkan</Button>
-                                        <Button variant={'outline'} onClick={() => setDialogVisibility(false)}>Batal</Button>
+                                        <Button disabled={isLoading} variant={'outline'} onClick={() => setDialogVisibility(false)}>Batal</Button>
                                     </div>
                                 </div>
                             </DialogDescription>

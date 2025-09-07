@@ -11,17 +11,17 @@ import ENDPOINT from "@/config/url"
 export function TeamSwitcher() {
   const [data, setData] = React.useState<{ logo: number, name: string, address: string }>({ logo: 0, name: "", address: "" })
   const fetchLogo = React.useCallback(async () => {
-    const res = await axiosInstance.get(`${ENDPOINT.SCHOOL_LOGO}`)
-    const res2 = await axiosInstance.get(`${ENDPOINT.SCHOOL_NAME}`)
-    const res3 = await axiosInstance.get(`${ENDPOINT.SCHOOL_ADDRESS}`)
-    const dat =
-    {
+    const [res, res2, res3] = await Promise.all([
+      axiosInstance.get(`${ENDPOINT.SCHOOL_LOGO}`),
+      axiosInstance.get(`${ENDPOINT.SCHOOL_NAME}`),
+      axiosInstance.get(`${ENDPOINT.SCHOOL_ADDRESS}`),
+    ])
+    setData({
       logo: res.data.data,
       name: res2.data.data,
       address: res3.data.data,
-    }
-    setData(dat)
-  }, [setData,])
+    })
+  }, [setData])
 
   React.useEffect(() => {
     fetchLogo()

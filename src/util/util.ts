@@ -23,3 +23,7 @@ export function truncateName(name: string, limit: number): string {
 
   return result;
 }
+
+export function getSchoolLogo(){
+  
+}

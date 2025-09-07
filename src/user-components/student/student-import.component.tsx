@@ -137,7 +137,7 @@ export default function ImportStudent({ reFetch }: { reFetch: () => void }) {
     return (
         <Dialog open={bool.dialog} onOpenChange={(a) => setBool({ ...bool, dialog: a })}>
             <DialogTrigger asChild>
-                <Button>
+                <Button disabled={bool.loading} >
                     <Plus></Plus> Import Siswa
                 </Button>
             </DialogTrigger>
@@ -155,6 +155,7 @@ export default function ImportStudent({ reFetch }: { reFetch: () => void }) {
                                     Masukkan Daftar Peserta Didik
                                 </Label>
                                 <Input
+                                disabled={bool.loading}
                                     type="file"
                                     name="file"
                                     accept=".xls,.xlsx"
@@ -162,19 +163,19 @@ export default function ImportStudent({ reFetch }: { reFetch: () => void }) {
                                     id="file"
                                     onChange={(e) => handleFileChange(e)}
                                 />
-                                <Button type="submit">
+                                <Button disabled={bool.loading} type="submit">
                                     Baca file Excell
                                 </Button>
                             </form>
                             <p>Berhasil membaca {fileData.length} data siswa</p>
                             <div className="flex w-full">
-                                <Button onClick={handleDownloadPdf}>
+                                <Button disabled={bool.loading} onClick={handleDownloadPdf}>
                                     Pisahkan data siswa
                                 </Button>
                             </div>
                             <div className="flex w-full justify-between items-center">
                                 <Label>Berhasil Memasukkan {success} data</Label>
-                                <Button onClick={() => {
+                                <Button disabled={bool.loading} onClick={() => {
                                     setSuccess(0);
                                     setSuccessData([]);
                                     setChunks([]);
