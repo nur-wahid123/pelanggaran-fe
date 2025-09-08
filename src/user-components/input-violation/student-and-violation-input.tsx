@@ -43,33 +43,35 @@ export default function StudentAndViolationInput() {
             return;
         }
         let imageId;
-        try {
-            const fd = new FormData();
-            files.forEach((f) => fd.append('files', f));
-            const res = await axiosInstance.post(ENDPOINT.UPLOAD_IMAGE, fd, {
-                onUploadProgress: (progressEvent) => {
-                    const percentCompleted = (Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 0)) / 100) * 30 + 10;
-                    setProgress(percentCompleted > 40 ? 40 : percentCompleted);
-                },
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
+        if (files.length !== 0) {
+            try {
+                const fd = new FormData();
+                files.forEach((f) => fd.append('files', f));
+                const res = await axiosInstance.post(ENDPOINT.UPLOAD_IMAGE, fd, {
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = (Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 0)) / 100) * 30 + 10;
+                        setProgress(percentCompleted > 40 ? 40 : percentCompleted);
+                    },
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
 
-            imageId = res.data.data
-        } catch (error) {
-            setIsLoading(false)
-            setProgress(0)
-            console.log(error);
-            toaster.toast({ description: 'Data Gagal Di Input', title: 'Gagal', variant: 'destructive' })
-            setDialogVisibility(false)
-            return
+                imageId = res.data.data
+            } catch (error) {
+                setIsLoading(false)
+                setProgress(0)
+                console.log(error);
+                toaster.toast({ description: 'Data Gagal Di Input', title: 'Gagal', variant: 'destructive' })
+                setDialogVisibility(false)
+                return
+            }
         }
         const body = {
             student_ids: stdIds,
             violation_type_ids: vltIds,
             note,
-            image_id: imageId
+            image_id: files.length === 0 ? null : imageId
         }
         try {
             await axiosInstance.post(ENDPOINT.CREATE_VIOLATION, body, {
