@@ -24,38 +24,45 @@ export function TeamSwitcher() {
   const [loading, setLoading] = React.useState<boolean>(true)
   const [error, setError] = React.useState<string | null>(null)
 
-
   const toaster = useToast();
 
-  const fetchSchoolInfo = React.useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const [logoRes, nameRes, addressRes] = await Promise.all([
-        axiosInstance.get(ENDPOINT.SCHOOL_LOGO),
-        axiosInstance.get(ENDPOINT.SCHOOL_NAME),
-        axiosInstance.get(ENDPOINT.SCHOOL_ADDRESS),
-      ])
-      setSchool({
-        logo: logoRes.data.data,
-        name: nameRes.data.data,
-        address: addressRes.data.data,
-      })
-    } catch (err: any) {
-      setError("Failed to load school information.")
-      toaster.toast({
-        title: "Gagal Memuat Data Sekolah",
-        description: err?.response?.data?.message || "Terjadi kesalahan saat memuat data sekolah.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false)
-    }
-  }, [toaster])
-
+  // Only run once on mount
   React.useEffect(() => {
+    let isMounted = true;
+    const fetchSchoolInfo = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const [logoRes, nameRes, addressRes] = await Promise.all([
+          axiosInstance.get(ENDPOINT.SCHOOL_LOGO),
+          axiosInstance.get(ENDPOINT.SCHOOL_NAME),
+          axiosInstance.get(ENDPOINT.SCHOOL_ADDRESS),
+        ])
+        if (isMounted) {
+          setSchool({
+            logo: logoRes.data.data,
+            name: nameRes.data.data,
+            address: addressRes.data.data,
+          })
+        }
+      } catch (err: any) {
+        if (isMounted) {
+          setError("Failed to load school information.")
+          toaster.toast({
+            title: "Gagal Memuat Data Sekolah",
+            description: err?.response?.data?.message || "Terjadi kesalahan saat memuat data sekolah.",
+            variant: "destructive",
+          });
+        }
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
     fetchSchoolInfo()
-  }, [fetchSchoolInfo])
+    return () => {
+      isMounted = false
+    }
+  }, []) // empty dependency array ensures this runs only once
 
   return (
     <SidebarMenu>
