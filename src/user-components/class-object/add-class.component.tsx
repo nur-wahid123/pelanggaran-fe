@@ -52,7 +52,7 @@ export default function AddClass({ reFetch }: { reFetch: () => void }) {
     return (
         <Dialog open={openAddClass} onOpenChange={setOpenAddClass}>
             <DialogTrigger asChild>
-                <Button className="flex gap-3 shadow hover:shadow-md" variant="outline"><Building className="w-4" />Tambah Kelas <PlusIcon className="w-4" /></Button>
+                <Button className="flex w-full gap-3 shadow hover:shadow-md" variant="outline"><Building className="w-4" />Tambah Kelas <PlusIcon className="w-4" /></Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
