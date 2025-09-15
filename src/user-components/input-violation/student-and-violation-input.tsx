@@ -143,53 +143,28 @@ export default function StudentAndViolationInput() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {dataStudents.map((student, i) => {
-                                    if (dataStudents.length === i + 1) {
-                                        return (
-                                            <TableRow ref={refS} key={i}>
-                                                <TableCell>
-                                                    <div className="text-lg font-semibold">
-                                                        {student.name?.toUpperCase()}
-                                                    </div>
-                                                    <p>{student.national_student_id}</p>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {student.school_student_id}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
-                                                        setStudentIds([...studentIds, student])
-                                                    }} className="btn hidden md:flex btn-primary">Tambahkan Siswa <PlusCircleIcon /></Button>
-                                                    <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
-                                                        setStudentIds([...studentIds, student])
-                                                    }} className="btn md:hidden btn-primary"><PlusCircleIcon /></Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    } else {
-                                        return (
-                                            <TableRow key={i}>
-                                                <TableCell>
-                                                    <div className="text-lg font-semibold">
-                                                        {student.name?.toUpperCase()}
-                                                    </div>
-                                                    <p>{student.national_student_id}</p>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {student.school_student_id}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
-                                                        setStudentIds([...studentIds, student])
-                                                    }} className="btn hidden md:flex btn-primary">Tambahkan Siswa <PlusCircleIcon /></Button>
-                                                    <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
-                                                        setStudentIds([...studentIds, student])
-                                                    }} className="btn md:hidden btn-primary"><PlusCircleIcon /></Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    }
-                                })}
+                                {dataStudents.map((student, i) => (
+                                    <TableRow ref={dataStudents.length === i + 1 ? refS : null} key={i}>
+                                        <TableCell>
+                                            <div className="text-lg font-semibold">
+                                                {student.name?.toUpperCase()}
+                                            </div>
+                                            <p>{student.national_student_id}</p>
+                                        </TableCell>
+                                        <TableCell>
+                                            {student.school_student_id}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
+                                                setStudentIds([...studentIds, student])
+                                            }} className="btn hidden md:flex btn-primary">Tambahkan Siswa <PlusCircleIcon /></Button>
+                                            <Button size={'sm'} disabled={studentIds.map(s => s.id).includes(student.id)} onClick={() => {
+                                                setStudentIds([...studentIds, student])
+                                            }} className="btn md:hidden btn-primary"><PlusCircleIcon /></Button>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                                )}
                                 {loadingStudent && <TableRow><TableCell colSpan={4} className="text-center">Loading...</TableCell></TableRow>}
                                 {!loadingStudent && dataStudents.length === 0 && <TableRow><TableCell colSpan={4} className="text-center">{search.student === '' ? 'Data Kosong' : 'Data Tidak Ditemukan'}</TableCell></TableRow>}
                             </TableBody>
@@ -217,10 +192,8 @@ export default function StudentAndViolationInput() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {dataViolations.map((violation, i) => {
-                                    if (dataViolations.length === i + 1) {
-                                        return (
-                                            <TableRow ref={refV} key={i}>
+                                {dataViolations.map((violation, i) => (
+                                            <TableRow ref={dataViolations.length === i + 1 ? refV : null} key={i}>
                                                 <TableCell>
                                                     <div>
                                                         {violation.name}
@@ -238,30 +211,7 @@ export default function StudentAndViolationInput() {
                                                     }} className="btn md:hidden btn-primary"><PlusCircleIcon /></Button>
                                                 </TableCell>
                                             </TableRow>
-                                        )
-                                    } else {
-                                        return (
-                                            <TableRow key={i}>
-                                                <TableCell>
-                                                    <div>
-                                                        {violation.name}
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    {violation.point}
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Button size={"sm"} disabled={violationIds.map(v => v.id).includes(violation.id)} onClick={() => {
-                                                        setViolationIds([...violationIds, violation])
-                                                    }} className="btn hidden md:flex btn-primary">Tambahkan Pelanggaran <PlusCircleIcon /></Button>
-                                                    <Button size={"sm"} disabled={violationIds.map(v => v.id).includes(violation.id)} onClick={() => {
-                                                        setViolationIds([...violationIds, violation])
-                                                    }} className="btn md:hidden btn-primary"><PlusCircleIcon /></Button>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    }
-                                })}
+                                        ))}
                                 {loadingViolationTypes && <TableRow><TableCell colSpan={4} className="text-center">Loading...</TableCell></TableRow>}
                                 {!loadingViolationTypes && dataViolations.length === 0 && <TableRow><TableCell colSpan={4} className="text-center">{search.violation === '' ? 'Data Kosong' : 'Data Tidak Ditemukan'}</TableCell></TableRow>}
                             </TableBody>

@@ -137,7 +137,7 @@ export default function ImportStudent({ reFetch }: { reFetch: () => void }) {
     return (
         <Dialog open={bool.dialog} onOpenChange={(a) => setBool({ ...bool, dialog: a })}>
             <DialogTrigger asChild>
-                <Button disabled={bool.loading} >
+                <Button className="w-full" disabled={bool.loading} >
                     <Plus></Plus> Import Siswa
                 </Button>
             </DialogTrigger>

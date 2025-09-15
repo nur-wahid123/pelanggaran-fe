@@ -4,6 +4,8 @@ import { Violation } from "./violation.object";
 export class Student {
   public id?: number;
 
+  public total_points?: number;
+
   public name?: string;
 
   public school_student_id?: string;
