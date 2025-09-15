@@ -8,7 +8,7 @@ import EditClass from "@/user-components/class-object/update-class.component";
 import useInfiniteScroll from "@/user-components/hook/useInfiniteScroll.hook";
 import SearchBar from "@/user-components/ui/search-bar";
 import { axiosInstance } from "@/util/request.util";
-import { Trash, Users, BookOpen, GraduationCap } from "lucide-react";
+import { Trash, Users, BookOpen } from "lucide-react";
 import { useCallback, useState } from "react";
 
 export default function Page() {
