@@ -13,7 +13,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import axios, { Canceler } from "axios";
 import StudentCard from "@/user-components/student/student-card.component";
 
-
 export interface StudentFilterType {
   classId?: number;
   search: string;
@@ -130,23 +129,29 @@ export default function Page() {
       <h1 className="scroll-m-20 text-2xl mb-4 font-extrabold tracking-tight lg:text-5xl">
         Siswa
       </h1>
-      <div className="flex flex-col md:flex-row justify-between items-center my-4 gap-4">
-        <SearchBar onSearch={handleSearch} />
-        <StudentFilterComponent filter={filter} setFilter={setFilter} />
-        <Button onClick={handleDownload}>Download template <Download /></Button>
-        <ImportStudent reFetch={reFetch} />
+      {/* Responsive horizontal scroll for header controls */}
+      <div className="w-full">
+        <div className="flex flex-row flex-wrap gap-4 items-stretch my-4">
+          <div className="flex-grow min-w-[220px]">
+            <SearchBar onSearch={handleSearch} />
+          </div>
+          <div className="flex-grow min-w-[220px]">
+            <StudentFilterComponent filter={filter} setFilter={setFilter} />
+          </div>
+          <div className="flex-grow min-w-[220px]">
+            <Button className="w-full" onClick={handleDownload}>
+              Download template <Download />
+            </Button>
+          </div>
+          <div className="flex-grow min-w-[220px]">
+            <ImportStudent reFetch={reFetch} />
+          </div>
+        </div>
       </div>
       <div className="max-h-[31rem] w-full flex flex-col gap-2 overflow-y-auto">
-        {data.map((student, i) => {
-          if (data.length === i + 1) {
-            return (
-              <StudentCard isLoading={isLoading} student={student} ref={lastElementRef} key={i} />)
-          } else {
-            return (
-              <StudentCard isLoading={isLoading} student={student} key={i} />
-            )
-          }
-        })}
+        {data.map((student, i) => (
+          <StudentCard isLoading={isLoading} student={student} ref={data.length === i + 1 ? lastElementRef : null} key={i} />
+        ))}
         {isLoading && (
           <div className="flex justify-center items-center h-full">
             Loading..

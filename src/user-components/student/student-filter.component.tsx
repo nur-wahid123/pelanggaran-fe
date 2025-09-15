@@ -37,7 +37,7 @@ export default function StudentFilterComponent({ filter, setFilter }: { filter: 
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Filter <Filter /></Button>
+                <Button className="w-full" variant="outline">Filter <Filter /></Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
