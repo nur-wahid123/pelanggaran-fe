@@ -1,5 +1,8 @@
 'use client'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import ENDPOINT from "@/config/url";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardResponseDto } from "@/objects/dashboard-response.dto";
@@ -9,13 +12,16 @@ import { useCallback, useEffect, useState } from "react";
 import { DatePickerWithRange } from "./date-picker";
 import { ChartData } from "./chart-data";
 import { ChartBarMixed } from "./bar-charts-data.component";
+import { AlertTriangle, Users, TrendingUp, Award, Calendar, BarChart3 } from "lucide-react";
 
 export default function Statistics() {
   const [data, setData] = useState<DashboardResponseDto>({ student_with_point_more_than_30: [] });
+  const [isLoading, setIsLoading] = useState(true);
   const toaster = useToast();
   const [dateRange, setDateRange] = useState<DateRange>({ start_date: formatDate(new Date()), finish_date: formatDate(new Date()) });
   const qry = thisMonth();
   const fetcData = useCallback(async () => {
+    setIsLoading(true);
     const dtRg = new DateRange();
     dtRg.start_date = dateRange.start_date;
     dtRg.finish_date = dateRange.finish_date;
@@ -24,8 +30,10 @@ export default function Statistics() {
       setData(res.data.data);
     }).catch(() => {
       toaster.toast({ title: "Error", description: "Gagal Mendapatkan Data", variant: "destructive" })
+    }).finally(() => {
+      setIsLoading(false);
     });
-  }, [dateRange]);
+  }, [dateRange, toaster]);
 
   function setDate(from: Date, to: Date) {
     const dtre = new DateRange();
@@ -43,67 +51,165 @@ export default function Statistics() {
   }, [])
 
   return (
-    <div className="flex flex-col gap-5 max-h-screen">
-      <div className=" flex flex-col gap-4 md:flex-row justify-between items-start md:items-center">
-        <Tabs defaultValue='this_month' className="w-full items-center flex  gap-6">
-          <TabsList>
-            <TabsTrigger onClick={() => setDate(qry.startOfMonth, qry.endOfMonth)} value="this_month">Bulan Ini</TabsTrigger>
-            <TabsTrigger value="custom">Custom</TabsTrigger>
-          </TabsList>
-          <TabsContent value="this_month">
-          </TabsContent>
-          <TabsContent className="flex mt-0 items-center" value="custom">
-            <DatePickerWithRange startDate={new Date(dateRange.start_date)} finishDate={new Date(dateRange.finish_date)} setOutDate={setDate} />
-          </TabsContent>
-        </Tabs>
-        <div className="text-md text-muted-foreground flex items-center w-fit whitespace-nowrap font-semibold">
-          {formatDateToExactString(new Date(dateRange.start_date))} - {formatDateToExactString(new Date(dateRange.finish_date))}
+    <div className="container mx-auto p-4 space-y-6">
+      {/* Header Section */}
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p className="text-muted-foreground">
+              Ringkasan data pelanggaran dan statistik
+            </p>
+          </div>
+          
+          {/* Date Range Selector */}
+          <Card className="w-full sm:w-auto">
+            <CardContent className="p-4">
+              <Tabs defaultValue='this_month' className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger 
+                    onClick={() => setDate(qry.startOfMonth, qry.endOfMonth)} 
+                    value="this_month"
+                    className="flex items-center gap-2"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    Bulan Ini
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="custom"
+                    className="flex items-center gap-2"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    Custom
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="this_month" className="mt-4">
+                  <div className="text-sm text-muted-foreground text-center">
+                    Menampilkan data bulan ini
+                  </div>
+                </TabsContent>
+                <TabsContent value="custom" className="mt-4">
+                  <DatePickerWithRange 
+                    startDate={new Date(dateRange.start_date)} 
+                    finishDate={new Date(dateRange.finish_date)} 
+                    setOutDate={setDate} 
+                  />
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-4">
 
-        <div className="max-w-1/4 flex flex-col gap-5 w-full p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-          <div>Total Pelanggaran</div>
-          <div className="flex justify-between">
-            <div className="text-4xl font-bold">{data.total_violation}</div>
-            <div className=" flex text-sm gap-2 items-end">
-              <div className={`font-semibold text-xs rounded-xl p-1 ${data.violation_percentage_from_last_month ? data.violation_percentage_from_last_month < 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}>{data.violation_percentage_from_last_month ? data.violation_percentage_from_last_month > 0 ? `+${data.violation_percentage_from_last_month}%` : `${data.violation_percentage_from_last_month}%` : `0%`}</div>
-              <div>dari bulan lalu</div>
+        {/* Date Range Display */}
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 text-sm">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <span className="font-medium">Periode:</span>
+              <span className="text-muted-foreground">
+                {formatDateToExactString(new Date(dateRange.start_date))} - {formatDateToExactString(new Date(dateRange.finish_date))}
+              </span>
             </div>
-          </div>
-        </div>
-
-        <div className="max-w-1/4 flex flex-col gap-5 w-full p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-          <div>Total Poin</div>
-          <div className="flex gap-4">
-            <div className="text-4xl font-bold">{data.total_point}</div>
-            <div className=" flex text-md gap-2 items-end">Poin</div>
-          </div>
-        </div>
-
-        <div className="max-w-1/4 flex flex-col gap-5 w-full p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-          <div>Total Siswa</div>
-          <div className="flex gap-4">
-            <div className="text-4xl font-bold">{data.total_student}</div>
-            <div className=" flex text-md gap-2 items-end">Siswa</div>
-          </div>
-        </div>
-
-        <div className="max-w-1/4 flex flex-col gap-5 w-full p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-          <div>Pelanggaran Terbanyak</div>
-          <div className="flex gap-4">
-            <div className="text-2xl overflow-x-auto overflow-y-hidden font-bold whitespace-nowrap">{data.most_violation_type?.name ? data.most_violation_type?.name : '-'}</div>
-            {/* <div className=" flex text-md gap-2 items-end">Siswa</div> */}
-          </div>
-        </div>
-
+          </CardContent>
+        </Card>
       </div>
-      <div className="grid gap-4 grid-cols-1 grid-rows-2 md:grid-rows-1 md:grid-cols-2">
-        <div className="">
-          <ChartData from={new Date(dateRange.start_date)} to={new Date(dateRange.finish_date)} />
+
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Violations Card */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Pelanggaran</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {isLoading ? "..." : data.total_violation || 0}
+            </div>
+            <div className="flex items-center gap-2 mt-2">
+              {data.violation_percentage_from_last_month !== undefined && (
+                <Badge 
+                  variant={data.violation_percentage_from_last_month < 0 ? "default" : "destructive"}
+                  className="text-xs"
+                >
+                  {data.violation_percentage_from_last_month > 0 ? "+" : ""}{data.violation_percentage_from_last_month}%
+                </Badge>
+              )}
+              <p className="text-xs text-muted-foreground">dari bulan lalu</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Total Points Card */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Poin</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {isLoading ? "..." : data.total_point || 0}
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">Total poin pelanggaran</p>
+          </CardContent>
+        </Card>
+
+        {/* Total Students Card */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Siswa</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {isLoading ? "..." : data.total_student || 0}
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">Jumlah siswa terdaftar</p>
+          </CardContent>
+        </Card>
+
+        {/* Most Violation Type Card */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pelanggaran Terbanyak</CardTitle>
+            <Award className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-lg font-bold break-words leading-tight">
+              {isLoading ? "..." : data.most_violation_type?.name || '-'}
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">Jenis pelanggaran paling sering</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Separator />
+
+      {/* Charts Section */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <BarChart3 className="h-5 w-5" />
+          <h2 className="text-xl font-semibold">Analisis Data</h2>
         </div>
-        <div className="">
-          <ChartBarMixed data={data.leaderboard} />
+        
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Grafik Pelanggaran</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ChartData from={new Date(dateRange.start_date)} to={new Date(dateRange.finish_date)} />
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Leaderboard Pelanggaran</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ChartBarMixed data={data.leaderboard} />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
