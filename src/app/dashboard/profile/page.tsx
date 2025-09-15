@@ -32,17 +32,23 @@ export default function Page() {
     confirm_new_password: false,
   });
   const [open, setOpen] = useState(false);
+  
+  const toaster = useToast();
 
   const fetchUser = useCallback(async () => {
     try {
       const res = await axiosInstance.get(ENDPOINT.PROFILE);
       setUser(res.data.data);
-    } catch (error) {
-      // Optionally handle error
+    } catch (error: any) {
+      // Handle error with toast
+      toaster.toast({
+        title: "Gagal Memuat Profil",
+        description: error?.response?.data?.message || "Terjadi kesalahan saat memuat data profil.",
+        variant: "destructive",
+      });
     }
-  }, []);
+  }, [toaster]);
 
-  const toaster = useToast();
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {

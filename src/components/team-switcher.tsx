@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sidebar"
 import { axiosInstance } from "@/util/request.util"
 import ENDPOINT from "@/config/url"
+import { useToast } from "@/hooks/use-toast"
 
 interface SchoolInfo {
   logo: number | string
@@ -23,6 +24,9 @@ export function TeamSwitcher() {
   const [loading, setLoading] = React.useState<boolean>(true)
   const [error, setError] = React.useState<string | null>(null)
 
+
+  const toaster = useToast();
+
   const fetchSchoolInfo = React.useCallback(async () => {
     setLoading(true)
     setError(null)
@@ -37,12 +41,17 @@ export function TeamSwitcher() {
         name: nameRes.data.data,
         address: addressRes.data.data,
       })
-    } catch (err) {
+    } catch (err: any) {
       setError("Failed to load school information.")
+      toaster.toast({
+        title: "Gagal Memuat Data Sekolah",
+        description: err?.response?.data?.message || "Terjadi kesalahan saat memuat data sekolah.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [toaster])
 
   React.useEffect(() => {
     fetchSchoolInfo()
