@@ -2,15 +2,15 @@
 
 import * as React from "react"
 import {
-  Building,
+  CogIcon,
+  FilePlusIcon,
   GalleryVerticalEnd,
-  LayoutDashboard,
-  List,
-  PlusSquareIcon,
-  Settings,
-  Tag,
-  User,
-  Users,
+  GraduationCapIcon,
+  HomeIcon,
+  ListChecksIcon,
+  SchoolIcon,
+  TagsIcon,
+  Users2Icon,
 } from "lucide-react"
 
 import { NavProjects } from "@/components/nav-projects"
@@ -27,7 +27,7 @@ import { RoleEnum } from "@/enums/role.enum"
 import { axiosInstance } from "@/util/request.util"
 import ENDPOINT from "@/config/url"
 
-// This is sample data.
+// Professional, neutral style data (no color classes)
 const data = {
   user: {
     name: "Fajar",
@@ -41,122 +41,56 @@ const data = {
       plan: "Bagelenan, Blitar",
     },
   ],
-  navMain: [
-    // {
-    //   title: "Dashboard",
-    //   url: "/dashboard",
-    //   icon: SquareTerminal,
-    //   isActive: true,
-    // },
-    // {
-    //   title: "Models",
-    //   url: "#",
-    //   icon: Bot,
-    //   items: [
-    //     {
-    //       title: "Genesis",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Explorer",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Quantum",
-    //       url: "#",
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: "Documentation",
-    //   url: "#",
-    //   icon: BookOpen,
-    //   items: [
-    //     {
-    //       title: "Introduction",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Get Started",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Tutorials",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Changelog",
-    //       url: "#",
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: "Settings",
-    //   url: "#",
-    //   icon: Settings2,
-    //   items: [
-    //     {
-    //       title: "General",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Team",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Billing",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Limits",
-    //       url: "#",
-    //     },
-    //   ],
-    // },
-  ],
   projects: [
     {
       name: "Dashboard",
       url: "/dashboard",
-      icon: LayoutDashboard,
+      icon: HomeIcon,
+      className: "font-semibold",
     },
     {
       name: "Input Pelanggaran",
       url: "/dashboard/input-violation",
-      icon: PlusSquareIcon,
+      icon: FilePlusIcon,
+      className: "font-medium",
     },
-    
   ],
   adminPage: [
     {
       name: "Data Pelanggaran",
       url: "/dashboard/violation",
-      icon: List,
+      icon: ListChecksIcon,
+      className: "font-medium",
     },
     {
       name: "Jenis Pelanggaran",
       url: "/dashboard/violation-type",
-      icon: Tag,
+      icon: TagsIcon,
+      className: "font-medium",
     },
     {
       name: "Kelas",
       url: "/dashboard/class-page",
-      icon: Building,
+      icon: SchoolIcon,
+      className: "font-medium",
     },
     {
       name: "Siswa",
       url: "/dashboard/student",
-      icon: User,
+      icon: GraduationCapIcon,
+      className: "font-medium",
     },
     {
       name: "User",
       url: "/dashboard/user",
-      icon: Users,
+      icon: Users2Icon,
+      className: "font-medium",
     },
     {
       name: "Pengaturan",
       url: "/dashboard/settings",
-      icon: Settings,
+      icon: CogIcon,
+      className: "font-medium",
     },
   ]
 }
@@ -189,7 +123,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavProjects title="User" projects={data.projects} />
         {user.role === RoleEnum.ADMIN && <NavProjects title="Halaman Admin" projects={data.adminPage} />}
-
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

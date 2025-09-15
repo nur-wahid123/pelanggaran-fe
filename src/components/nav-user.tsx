@@ -35,6 +35,14 @@ export function NavUser({
   user: User
 }) {
   const { isMobile } = useSidebar()
+  const initials = user.name
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+    : "U"
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -43,16 +51,17 @@ export function NavUser({
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              aria-label="User menu"
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={''} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">{user.name || "User"}</span>
+                <span className="truncate text-xs text-muted-foreground">{user.email || "No email"}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ChevronsUpDown className="ml-auto size-4" aria-hidden="true" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -65,24 +74,28 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={''} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">{user.name || "User"}</span>
+                  <span className="truncate text-xs text-muted-foreground">{user.email || "No email"}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link className="flex gap-2" href={`/dashboard/profile`}>
-                <User2Icon />
-                Profil user
+            <DropdownMenuItem asChild>
+              <Link className="flex items-center gap-2" href={`/dashboard/profile`}>
+                <User2Icon className="size-4" aria-hidden="true" />
+                <span>Profile</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => logout()}>
-              <LogOut />
-              Log out
+            <DropdownMenuItem
+              onClick={() => logout()}
+              className="flex items-center gap-2 text-destructive"
+              aria-label="Log out"
+            >
+              <LogOut className="size-4" aria-hidden="true" />
+              <span>Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
