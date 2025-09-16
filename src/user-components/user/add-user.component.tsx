@@ -69,7 +69,7 @@ export default function AddUser({ reFetch }: { reFetch: () => void }) {
     return (
         <Dialog open={openAdd} onOpenChange={setOpenAdd}>
             <DialogTrigger asChild>
-                <Button className="flex gap-3 shadow hover:shadow-md" variant="outline"><Building className="w-4" />Tambah {config.key_word.toWellFormed()} <PlusIcon className="w-4" /></Button>
+                <Button className="flex w-full gap-3 shadow hover:shadow-md" variant="outline"><Building className="w-4" />Tambah {config.key_word.toWellFormed()} <PlusIcon className="w-4" /></Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
