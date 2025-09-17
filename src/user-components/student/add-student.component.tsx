@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 interface AddStudentProps {
   refresh: () => void;
@@ -36,8 +37,8 @@ export default function AddStudent({ refresh }: AddStudentProps) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [open, setOpen] = useState(false);
+  const toaster = useToast();
 
   // For class select, use infinite scroll hook
   const {
@@ -54,8 +55,6 @@ export default function AddStudent({ refresh }: AddStudentProps) {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSuccess(false);
-
     try {
       await axiosInstance.post(`${ENDPOINT.STUDENT_CREATE}`, {
         name: formData.name,
@@ -63,7 +62,11 @@ export default function AddStudent({ refresh }: AddStudentProps) {
         nisn: formData.nisn,
         class_name: formData.class_name,
       });
-      setSuccess(true);
+      toaster.toast({
+        title: "Sukses",
+        description: "Siswa berhasil ditambahkan.",
+        variant: "default",
+      });
       setFormData({
         name: "",
         nis: "",
@@ -156,7 +159,6 @@ export default function AddStudent({ refresh }: AddStudentProps) {
             )}
           </div>
           {error && <div className="text-red-500 text-sm">{error}</div>}
-          {success && <div className="text-green-600 text-sm">Siswa berhasil ditambahkan!</div>}
           <DialogFooter>
             <Button type="submit" disabled={loading}>
               {loading ? "Menambah..." : "Tambah Siswa"}
