@@ -15,7 +15,7 @@ import { convertStringToEnum } from "@/enums/chart-type.enum";
 
 const config = {
     url: ENDPOINT.CREATE_USER,
-    key_word: "user"
+    key_word: "User"
 }
 
 export default function AddUser({ reFetch }: { reFetch: () => void }) {
@@ -37,7 +37,7 @@ export default function AddUser({ reFetch }: { reFetch: () => void }) {
                 reFetch();
                 toast.toast({
                     title: "Success",
-                    description: `Berhasil Tambahkan ${config.key_word.toWellFormed()}`,
+                    description: `Berhasil Tambahkan ${config.key_word}`,
                     variant: "default",
                 })
                 setOpenAdd(false);
@@ -69,14 +69,14 @@ export default function AddUser({ reFetch }: { reFetch: () => void }) {
     return (
         <Dialog open={openAdd} onOpenChange={setOpenAdd}>
             <DialogTrigger asChild>
-                <Button className="flex w-full gap-3 shadow hover:shadow-md" variant="outline"><Building className="w-4" />Tambah {config.key_word.toWellFormed()} <PlusIcon className="w-4" /></Button>
+                <Button className="flex w-full gap-3 shadow hover:shadow-md" variant="outline"><Building className="w-4" />Tambah {config.key_word} <PlusIcon className="w-4" /></Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Tambah {config.key_word.toWellFormed()}</DialogTitle>
+                    <DialogTitle>Tambah {config.key_word}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                    <Label>Nama {config.key_word.toWellFormed()}</Label>
+                    <Label>Nama {config.key_word}</Label>
                     <Input
                         type="text"
                         value={value.name}
@@ -127,7 +127,7 @@ export default function AddUser({ reFetch }: { reFetch: () => void }) {
                     </div>
                     
                     <Button type="submit">
-                        Tambah {config.key_word.toWellFormed()}
+                        Tambah {config.key_word}
                     </Button>
                 </form>
             </DialogContent>
