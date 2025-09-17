@@ -16,7 +16,7 @@ import { Dialog as ConfirmDialog, DialogContent as ConfirmDialogContent, DialogH
 
 const config = {
     url: ENDPOINT.CREATE_USER,
-    key_word: "user"
+    key_word: "User"
 };
 
 export default function EditUser({ id, reFetch }: { id: number | undefined, reFetch: () => void }) {
@@ -69,7 +69,7 @@ export default function EditUser({ id, reFetch }: { id: number | undefined, reFe
                 reFetch();
                 toast.toast({
                     title: "Berhasil!",
-                    description: `Data ${config.key_word.toWellFormed()} berhasil diperbarui.`,
+                    description: `Data ${config.key_word} berhasil diperbarui.`,
                     variant: "default",
                 });
                 setOpenEdit(false);
@@ -95,7 +95,7 @@ export default function EditUser({ id, reFetch }: { id: number | undefined, reFe
                 reFetch();
                 toast.toast({
                     title: "Berhasil!",
-                    description: `${config.key_word.toWellFormed()} berhasil dihapus.`,
+                    description: `${config.key_word} berhasil dihapus.`,
                     variant: "default",
                 });
                 setOpenDelete(false);
@@ -125,7 +125,7 @@ export default function EditUser({ id, reFetch }: { id: number | undefined, reFe
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>
-                                    Edit {value?.name ? <b>{value.name}</b> : config.key_word.toWellFormed()}
+                                    Edit {value?.name ? <b>{value.name}</b> : config.key_word}
                                 </p>
                             </TooltipContent>
                         </Tooltip>
@@ -136,26 +136,26 @@ export default function EditUser({ id, reFetch }: { id: number | undefined, reFe
                         <DialogTitle>
                             <span className="flex items-center gap-2">
                                 <Pencil className="w-5 h-5" />
-                                Edit {`${config.key_word.toWellFormed()}`}
+                                Edit {`${config.key_word}`}
                             </span>
                         </DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleEditSubmit} className="flex flex-col gap-4">
-                        <Label>Nama {`${config.key_word.toWellFormed()}`}</Label>
+                        <Label>Nama {`${config.key_word}`}</Label>
                         <Input
                             type="text"
                             value={value.name}
                             onChange={(e) => setValue({ ...value, name: e.target.value })}
                             placeholder="Masukkan nama"
                         />
-                        <Label>Username {`${config.key_word.toWellFormed()}`}</Label>
+                        <Label>Username {`${config.key_word}`}</Label>
                         <Input
                             type="text"
                             value={value.username}
                             onChange={(e) => setValue({ ...value, username: e.target.value })}
                             placeholder="Masukkan username"
                         />
-                        <Label>Email {`${config.key_word.toWellFormed()}`}</Label>
+                        <Label>Email {`${config.key_word}`}</Label>
                         <Input
                             type="email"
                             value={value.email}
@@ -199,7 +199,7 @@ export default function EditUser({ id, reFetch }: { id: number | undefined, reFe
                         </ConfirmDialogTitle>
                     </ConfirmDialogHeader>
                     <div>
-                        Apakah Anda yakin ingin menyimpan perubahan pada {value?.name ? <b>{value.name}</b> : config.key_word.toWellFormed()}?
+                        Apakah Anda yakin ingin menyimpan perubahan pada {value?.name ? <b>{value.name}</b> : config.key_word}?
                     </div>
                     <ConfirmDialogFooter className="flex gap-2 justify-end mt-4">
                         <Button variant="outline" onClick={() => setOpenEditConfirm(false)} disabled={pendingEdit}>
@@ -226,7 +226,7 @@ export default function EditUser({ id, reFetch }: { id: number | undefined, reFe
                     </TooltipTrigger>
                     <TooltipContent>
                         <p>
-                            Hapus {value?.name ? <b>{value.name}</b> : config.key_word.toWellFormed()}
+                            Hapus {value?.name ? <b>{value.name}</b> : config.key_word}
                         </p>
                     </TooltipContent>
                 </Tooltip>
@@ -239,7 +239,7 @@ export default function EditUser({ id, reFetch }: { id: number | undefined, reFe
                         </ConfirmDialogTitle>
                     </ConfirmDialogHeader>
                     <div>
-                        Apakah Anda yakin ingin menghapus {value?.name ? <b>{value.name}</b> : config.key_word.toWellFormed()}? Tindakan ini tidak dapat dibatalkan.
+                        Apakah Anda yakin ingin menghapus {value?.name ? <b>{value.name}</b> : config.key_word}? Tindakan ini tidak dapat dibatalkan.
                     </div>
                     <ConfirmDialogFooter className="flex gap-2 justify-end mt-4">
                         <Button variant="outline" onClick={() => setOpenDelete(false)}>
