@@ -30,14 +30,8 @@ export default function Page() {
                     <ImportViolationType reFetch={refresh} />
                 </div>
                 <div className="max-h-[31rem] gap-3 w-full overflow-x-auto overflow-y-auto flex flex-col">
-                    {violationTypes.map((violationType, index) => {
-                       if(violationTypes.length === index + 1){
-                           return <ViolationTypeCard key={index} reFetch={refresh} ref={ref} violationType={violationType} isLoading={loading} />
-                       } else {
-                           return <ViolationTypeCard key={index} reFetch={refresh} violationType={violationType} isLoading={loading} />
-                       }
-                    })}
-                    
+                    {violationTypes.map((violationType, index) => <ViolationTypeCard key={index} reFetch={refresh} ref={violationTypes.length === index + 1 ? ref : null} violationType={violationType} isLoading={loading} />)}
+
                     {violationTypes.length === 0 && !loading && <p className="text-center">Jenis Pelanggaran Kosong</p>}
                 </div>
             </div>
