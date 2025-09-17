@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { Button } from "@/components/ui/button";
 import ENDPOINT from "@/config/url";
 import { Student } from "@/objects/student.object";
@@ -12,6 +12,7 @@ import ExcelJS from "exceljs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import axios, { Canceler } from "axios";
 import StudentCard from "@/user-components/student/student-card.component";
+import AddStudent from "@/user-components/student/add-student.component";
 
 export interface StudentFilterType {
   classId?: number;
@@ -20,7 +21,10 @@ export interface StudentFilterType {
 
 export default function Page() {
   const [data, setData] = useState<Student[]>([]);
-  const [pagination, setPagination] = useState<PaginateContentProps>({ page: 1, take: 20 });
+  const [pagination, setPagination] = useState<PaginateContentProps>({
+    page: 1,
+    take: 20,
+  });
   const [filter, setFilter] = useState<StudentFilterType>({
     classId: undefined,
     search: "",
@@ -28,27 +32,30 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const observer = useRef<IntersectionObserver | null>(null);
 
-  const lastElementRef = useCallback((node: HTMLTableRowElement | null) => {
-    if (isLoading) return;
-    if (observer.current) observer.current.disconnect();
+  const lastElementRef = useCallback(
+    (node: HTMLTableRowElement | null) => {
+      if (isLoading) return;
+      if (observer.current) observer.current.disconnect();
 
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && pagination.has_next_page) {
-        setPagination((prev) => ({ ...prev, page: (prev?.page ?? 1) + 1 }));
-      }
-    });
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && pagination.has_next_page) {
+          setPagination((prev) => ({ ...prev, page: (prev?.page ?? 1) + 1 }));
+        }
+      });
 
-    if (node) observer.current.observe(node);
-  }, [isLoading, pagination]);
+      if (node) observer.current.observe(node);
+    },
+    [isLoading, pagination]
+  );
 
   async function handleDownload() {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Template Input Siswa');
+    const worksheet = workbook.addWorksheet("Template Input Siswa");
     worksheet.columns = [
-      { header: 'Nama', width: 40 },
-      { header: 'NISN', width: 20 },
-      { header: 'NIS', width: 8 },
-      { header: 'Kelas', width: 8 },
+      { header: "Nama", width: 40 },
+      { header: "NISN", width: 20 },
+      { header: "NIS", width: 8 },
+      { header: "Kelas", width: 8 },
     ];
 
     worksheet.getRow(1).eachCell((cell) => {
@@ -56,52 +63,57 @@ export default function Page() {
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `Template Input Siswa.xlsx`;
     a.click();
     URL.revokeObjectURL(url);
   }
 
-  const fetchData = useCallback(async (start: number, limit: number) => {
-    setIsLoading(true);
-    let cancel: Canceler;
-    try {
-      const params: Record<string, any> = {
-        page: start,
-        take: limit,
-        search: filter.search,
-      };
-      if (filter.classId !== undefined) {
-        params.class_id = filter.classId;
-      }
+  const fetchData = useCallback(
+    async (start: number, limit: number) => {
+      setIsLoading(true);
+      let cancel: Canceler;
+      try {
+        const params: Record<string, any> = {
+          page: start,
+          take: limit,
+          search: filter.search,
+        };
+        if (filter.classId !== undefined) {
+          params.class_id = filter.classId;
+        }
 
-      const res = await axiosInstance.get(`${ENDPOINT.MASTER_STUDENT}`, {
-        params,
-        cancelToken: new axios.CancelToken((c) => (cancel = c)),
-      });
+        const res = await axiosInstance.get(`${ENDPOINT.MASTER_STUDENT}`, {
+          params,
+          cancelToken: new axios.CancelToken((c) => (cancel = c)),
+        });
 
-      if (Array.isArray(res.data.data)) {
-        setData((prevData) =>
-          start === 1 ? res.data.data : [...prevData, ...res.data.data]
-        );
-      }
+        if (Array.isArray(res.data.data)) {
+          setData((prevData) =>
+            start === 1 ? res.data.data : [...prevData, ...res.data.data]
+          );
+        }
 
-      if (res.data.pagination) {
-        setPagination((prev) => ({
-          ...prev,
-          has_next_page: res.data.pagination.has_next_page,
-        }));
+        if (res.data.pagination) {
+          setPagination((prev) => ({
+            ...prev,
+            has_next_page: res.data.pagination.has_next_page,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching student:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching student:", error);
-    } finally {
-      setIsLoading(false);
-    }
-    return () => cancel?.();
-  }, [filter]);
+      return () => cancel?.();
+    },
+    [filter]
+  );
 
   useEffect(() => {
     fetchData(1, pagination.take ?? 20); // Start from page 1 on filter change
@@ -122,7 +134,7 @@ export default function Page() {
   const reFetch = useCallback(() => {
     fetchData(1, pagination.take ?? 20);
     // setPagination({ page: 1, take: pagination.take ?? 20 }); // Reset to first page
-  }, [setPagination])
+  }, [setPagination]);
 
   return (
     <div className="p-4">
@@ -146,11 +158,19 @@ export default function Page() {
           <div className="flex-grow min-w-[220px]">
             <ImportStudent reFetch={reFetch} />
           </div>
+          <div className="flex-grow min-w-[220px]">
+            <AddStudent refresh={reFetch} />
+          </div>
         </div>
       </div>
       <div className="max-h-[31rem] w-full flex flex-col gap-2 overflow-y-auto">
         {data.map((student, i) => (
-          <StudentCard isLoading={isLoading} student={student} ref={data.length === i + 1 ? lastElementRef : null} key={i} />
+          <StudentCard
+            isLoading={isLoading}
+            student={student}
+            ref={data.length === i + 1 ? lastElementRef : null}
+            key={i}
+          />
         ))}
         {isLoading && (
           <div className="flex justify-center items-center h-full">
@@ -164,5 +184,5 @@ export default function Page() {
         )}
       </div>
     </div>
-  )
+  );
 }
