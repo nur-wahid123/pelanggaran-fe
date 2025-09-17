@@ -141,7 +141,7 @@ export default function AddStudent({ refresh }: AddStudentProps) {
               className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-primary focus:border-primary"
               >
               <option value="">Pilih Kelas</option>
-              {classes.map((cls, idx) => (
+              {classes.map((cls) => (
                   <option
                   key={cls.id}
                   ref={classRef}
